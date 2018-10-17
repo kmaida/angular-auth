@@ -1,5 +1,5 @@
 // Auth0 configuration
 module.exports = {
-  AUTH0_DOMAIN: 'your-auth0-domain', // e.g., 'you.auth0.com'
+  AUTH0_DOMAIN: '[YOUR_AUTH0_DOMAIN]', // e.g., 'you.auth0.com'
   AUTH0_API_AUDIENCE: 'http://localhost:3000/api/',
 };
