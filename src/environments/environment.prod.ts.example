@@ -1,0 +1,9 @@
+export const environment = {
+  production: true,
+  auth: {
+    clientId: '[YOUR_CLIENT_ID]',
+    domain: '[YOUR_AUTH0_DOMAIN]', // e.g., you.auth0.com
+    redirect: 'http://localhost:3000/callback',
+    logoutUrl: 'http://localhost:3000'
+  }
+};
