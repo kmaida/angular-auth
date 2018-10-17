@@ -1,9 +1,11 @@
-<div *ngIf="(dinos$ | async) as dinos">
-  <h2>Dinosaurs</h2>
+<ng-template #noDinos>
+  <app-loading *ngIf="loading"></app-loading>
+  <app-error *ngIf="error"></app-error>
+</ng-template>
 
-  <ul>
-    <li *ngFor="let dino of dinos">
-      {{dino.name}}
-    </li>
-  </ul>
+<div *ngIf="(dinos$ | async) as dinos else noDinos">
+  <h1 class="text-center py-2">🦕 🦖</h1>
+  <ng-container *ngFor="let dino of dinos">
+    <app-dino [dino]="dino"></app-dino>
+  </ng-container>
 </div>

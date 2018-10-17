@@ -8,6 +8,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SecureComponent } from './pages/secure/secure.component';
 import { AuthComponent } from './auth/auth/auth.component';
+import { LoadingComponent } from './loading.component';
+import { ErrorComponent } from './error.component';
+import { DinoComponent } from './pages/home/dino/dino.component';
+import { DragonComponent } from './pages/secure/dragon/dragon.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +19,11 @@ import { AuthComponent } from './auth/auth/auth.component';
     HomeComponent,
     ProfileComponent,
     SecureComponent,
-    AuthComponent
+    AuthComponent,
+    LoadingComponent,
+    ErrorComponent,
+    DinoComponent,
+    DragonComponent
   ],
   imports: [
     BrowserModule,

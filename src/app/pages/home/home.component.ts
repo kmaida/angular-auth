@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from './../../api.service';
-import { AuthService } from './../../auth/auth.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +8,17 @@ import { AuthService } from './../../auth/auth.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  dinos$ = this.api.getDinos$();
+  dinos$ = this.api.getDinos$().pipe(
+    tap(
+      res => this.loading = false,
+      err => {
+        this.loading = false;
+        this.error = true;
+      }
+    )
+  );
+  loading = true;
+  error: boolean;
 
   constructor(private api: ApiService) { }
 

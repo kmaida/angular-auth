@@ -26,9 +26,6 @@ export class AuthService {
   userProfile$ = new BehaviorSubject<any>(null);
   // Authentication navigation
   logoutUrl = '/';
-  // Create observable of authorize output
-  // @TODO: this doesn't work!!! it just returns errors when used this way (why?)
-  popupAuthorize$ = bindNodeCallback(this._Auth0.popup.authorize.bind(this._Auth0));
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
@@ -36,10 +33,7 @@ export class AuthService {
   constructor(private router: Router) { }
 
   login() {
-    // this.popupAuthorize$({}).subscribe(
-    //   authResult => this._localLogin(authResult),
-    //   err => this._handleError(err)
-    // );
+    // @NOTE: cannot bindNodeCallback for this; it causes errors (why?)
     this._Auth0.popup.authorize({}, (err, authResult) => {
       if (authResult) {
         this._localLogin(authResult);
@@ -53,7 +47,6 @@ export class AuthService {
     if (authResult && authResult.idToken) {
       // Observable of token
       this.token$ = of(authResult.idToken);
-      console.log(authResult, this.token$);
       // Emit value for user data subject
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating this app is logged in
