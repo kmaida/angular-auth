@@ -30,6 +30,7 @@ export class AuthGuard implements CanActivate {
       return this.checkToken();
     } else {
       console.log('not authenticated; should prompt for login');
+      // @TODO: this returns some kind of JSON parsing error
       this.auth.login();
       return false;
     }
