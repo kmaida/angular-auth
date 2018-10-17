@@ -55,17 +55,23 @@ From the root of this project, run:
 $ npm run dev
 ```
 
-This will concurrently serve the Angular app using a proxy to the API server. Your app will be available at `http://localhost:3000` and the API will be available at `http://localhost:3000/api`. Changes will be watched by the Angular CLI.
+This will concurrently serve the Angular app using a proxy to the API server. Your app will be available at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes will be watched by the Angular CLI.
 
 ### Staging / Production
 
-From the root of this project, run:
+To build _and_ serve a production-ready version of the application, from the root of this project, run:
 
 ```bash
 $ npm run stage
 ```
 
 This will perform a production build of your Angular application and serve the minified build and API at `http://localhost:3000`. Changes will _not_ be watched.
+
+If you have _already_ built the project and just want to serve it, you can run:
+
+```bash
+$ node server
+```
 
 ## What is Auth0?
 

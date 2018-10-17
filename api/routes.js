@@ -4,8 +4,12 @@
  |--------------------------------------
  */
 
+// Auth
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
+// Data
+const dinosData = require('./data/dinos.json');
+const dragonsData = require('./data/dragons.json');
 
 /*
  |--------------------------------------
@@ -15,7 +19,7 @@ const jwks = require('jwks-rsa');
 
 module.exports = function(app, config) {
   // Authentication middleware
-  const jwtCheck = jwt({
+  const authCheck = jwt({
     secret: jwks.expressJwtSecret({
       cache: true,
       rateLimit: true,
@@ -38,9 +42,14 @@ module.exports = function(app, config) {
     res.send('API works');
   });
 
-  // GET secure data
-  app.get('/api/secure', jwtCheck, (req, res) => {
-    res.send('Secure API works');
+  // GET public data (dinosaurs)
+  app.get('/api/public', (req, res) => {
+    res.json(dinosData)
+  });
+
+  // GET secure data (dragons)
+  app.get('/api/secure', authCheck, (req, res) => {
+    res.json(dragonsData);
   });
 
 };

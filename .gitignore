@@ -2,6 +2,7 @@
 
 /api/config.js
 environment.ts
+environment.prod.ts
 
 # compiled output
 /dist

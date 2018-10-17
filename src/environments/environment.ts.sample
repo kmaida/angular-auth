@@ -5,9 +5,10 @@
 export const environment = {
   production: false,
   auth: {
-    clientId: '[AUTH0 CLIENT ID]',
-    domain: '[AUTH0 DOMAIN]', // e.g., you.auth0.com
-    audience: 'http://localhost:3000/api/'
+    clientId: '[YOUR_CLIENT_ID]',
+    domain: '[YOUR_AUTH0_DOMAIN]', // e.g., you.auth0.com
+    redirect: 'http://localhost:4200/callback',
+    logoutUrl: 'http://localhost:4200'
   }
 };
 

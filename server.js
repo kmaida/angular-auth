@@ -23,13 +23,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set port
-const port = process.env.PORT || '3000';
+const port = '3000';
 app.set('port', port);
 
 // Set static path to Angular app in dist for staging / prod
 if (process.env.NODE_ENV !== 'dev') {
   app.use('/', express.static(path.join(__dirname, './dist/angular-authentication')));
 }
+
+// Set static path to callback popup authentication window
+app.use('/callback', express.static(path.join(__dirname, './callback')));
 
 /*
  |--------------------------------------

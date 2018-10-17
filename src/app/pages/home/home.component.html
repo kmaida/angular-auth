@@ -1,0 +1,9 @@
+<div *ngIf="(dinos$ | async) as dinos">
+  <h2>Dinosaurs</h2>
+
+  <ul>
+    <li *ngFor="let dino of dinos">
+      {{dino.name}}
+    </li>
+  </ul>
+</div>

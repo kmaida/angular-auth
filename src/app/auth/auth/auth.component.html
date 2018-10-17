@@ -1,0 +1,16 @@
+<div class="container py-1 mb-2">
+  <div *ngIf="!auth.authenticated">
+    <button
+      class="btn btn-success btn-sm"
+      (click)="auth.login()">Log In</button>
+  </div>
+
+  <ng-container *ngIf="auth.authenticated">
+    <div *ngIf="(user$ | async) as user">
+      <a routerLink="/profile" href>{{ user.name }}</a>
+      <button
+        class="btn btn-danger btn-sm"
+        (click)="auth.logout()">Log Out</button>
+    </div>
+  </ng-container>
+</div>
