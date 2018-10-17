@@ -22,7 +22,7 @@
 
 ### Auth0 API Setup
 
-1. Go to [**APIs**](https://manage.auth0.com/#/apis) in your Auth0 dashboard and click on the "Create API" button. Enter a name for the API. Set the **Identifier** to your API endpoint URL. In this example, this is `http://localhost:3000/api/`. The **Signing Algorithm** should be `RS256`.
+Go to [**APIs**](https://manage.auth0.com/#/apis) in your Auth0 dashboard and click on the "Create API" button. Enter a name for the API. Set the **Identifier** to your API endpoint URL. In this example, this is `http://localhost:3000/api/`. The **Signing Algorithm** should be `RS256`.
 
 We're now ready to implement Auth0 authentication on both our Angular client and Node backend, which provides our API and also serves our Angular application.
 
@@ -39,6 +39,8 @@ From the root directory, run the following command to install dependencies:
 ```bash
 $ npm install
 ```
+
+## Configuration
 
 1. Open `/api/config.js.example` and remove `.example` from the file name. Then replace `[YOUR_AUTH0_DOMAIN]` with your Auth0 domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
 2. Open `/src/app/environments/environment.example` and remove `.example` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.

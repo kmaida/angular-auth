@@ -1,6 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 /api/config.js
+environment.ts
 
 # compiled output
 /dist
