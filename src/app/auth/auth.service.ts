@@ -38,7 +38,8 @@ export class AuthService {
       if (authResult) {
         this._localLogin(authResult);
       } else if (err) {
-        this._handleError(err);
+        console.log(err);
+        // this._handleError(err);
       }
     });
   }
