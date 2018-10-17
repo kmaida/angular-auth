@@ -1,13 +1,14 @@
 <ng-container *ngIf="auth.isAuthenticated">
-  <div *ngIf="(auth.userProfile$ | async) as user">
+  <ng-template #noProfile>
+    <app-loading></app-loading>
+  </ng-template>
+
+  <ng-container *ngIf="(auth.userProfile$ | async) as user else noProfile">
     <h2>{{ user.name }}</h2>
     <ul>
       <li *ngFor="let profileProp of makeProfileArray(user)">
         <code>{{ profileProp }}</code>
       </li>
     </ul>
-    <p>
-      <a routerLink="/" href>Back to Home</a>
-    </p>
-  </div>
+  </ng-container>
 </ng-container>
