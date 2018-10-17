@@ -1,3 +1,10 @@
-<p>
-  secure works!
-</p>
+<ng-container *ngIf="auth.isAuthenticated">
+  <ng-container *ngIf="(dragons$ | async) as dragons">
+    <h2>Dragons</h2>
+    <ul>
+      <li *ngFor="let dragon of dragons">
+        {{dragon.name}}
+      </li>
+    </ul>
+  </ng-container>
+</ng-container>

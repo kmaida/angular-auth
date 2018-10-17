@@ -26,7 +26,6 @@ module.exports = function(app, config) {
       jwksRequestsPerMinute: 5,
       jwksUri: `https://${config.AUTH0_DOMAIN}/.well-known/jwks.json`
     }),
-    audience: config.AUTH0_API_AUDIENCE,
     issuer: `https://${config.AUTH0_DOMAIN}/`,
     algorithm: 'RS256'
   });

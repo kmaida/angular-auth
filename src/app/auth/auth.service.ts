@@ -20,16 +20,15 @@ export class AuthService {
   });
   // Track whether or not to renew token
   private _authFlag = 'isLoggedIn';
-  // Create stream for token
+  // Create stream of token
   token$: Observable<string>;
   // Create stream for user profile data
   userProfile$ = new BehaviorSubject<any>(null);
   // Authentication navigation
-  onAuthSuccessUrl = '/';
-  onAuthFailureUrl = '/';
-  logoutUrl = environment.auth.logoutUrl;
-  // Create observable of Auth0 parseHash method to gather auth results
-  parseHash$ = bindNodeCallback(this._Auth0.parseHash.bind(this._Auth0));
+  logoutUrl = '/';
+  // Create observable of authorize output
+  // @TODO: this doesn't work!!! it just returns errors when used this way (why?)
+  popupAuthorize$ = bindNodeCallback(this._Auth0.popup.authorize.bind(this._Auth0));
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
@@ -37,53 +36,70 @@ export class AuthService {
   constructor(private router: Router) { }
 
   login() {
+    // this.popupAuthorize$({}).subscribe(
+    //   authResult => this._localLogin(authResult),
+    //   err => this._handleError(err)
+    // );
     this._Auth0.popup.authorize({}, (err, authResult) => {
-      if (authResult && authResult.idToken && !this.authenticated) {
-        this._setAuth(authResult);
+      if (authResult) {
+        this._localLogin(authResult);
       } else if (err) {
         this._handleError(err);
       }
     });
   }
 
-  private _setAuth(authResult) {
-    // Observable of token
-    this.token$ = of(authResult.idToken);
-    // Emit value for user data subject
-    this.userProfile$.next(authResult.idTokenPayload);
-    // Set flag in local storage stating this app is logged in
-    localStorage.setItem(this._authFlag, JSON.stringify(true));
+  private _localLogin(authResult) {
+    if (authResult && authResult.idToken) {
+      // Observable of token
+      this.token$ = of(authResult.idToken);
+      console.log(authResult, this.token$);
+      // Emit value for user data subject
+      this.userProfile$.next(authResult.idTokenPayload);
+      // Set flag in local storage stating this app is logged in
+      localStorage.setItem(this._authFlag, JSON.stringify(true));
+    } else {
+      this._localLogout(true);
+    }
   }
 
-  get authenticated(): boolean {
+  get isAuthenticated(): boolean {
     return JSON.parse(localStorage.getItem(this._authFlag));
   }
 
   renewAuth() {
-    if (this.authenticated) {
+    if (this.isAuthenticated) {
       this.checkSession$({}).subscribe(
-        authResult => this._setAuth(authResult),
-        err => {
-          localStorage.removeItem(this._authFlag);
-          this.router.navigate([this.onAuthFailureUrl]);
-        }
+        authResult => this._localLogin(authResult),
+        err => this._handleError(err)
       );
     }
   }
 
-  logout() {
+  private _localLogout(redirect?: boolean) {
     // Set authentication status flag in local storage to false
     localStorage.setItem(this._authFlag, JSON.stringify(false));
+    // Emit null value for user data subject
+    this.userProfile$.next(null);
+    // Redirect back to public home if true
+    if (redirect) {
+      this.router.navigate([this.logoutUrl]);
+    }
+  }
+
+  logout() {
+    this._localLogout();
     // This does a refresh and redirects back to homepage
     // Make sure you have the logout URL in your Auth0
     // Dashboard Application settings in Allowed Logout URLs
     this._Auth0.logout({
-      returnTo: this.logoutUrl,
+      returnTo: environment.auth.logoutUrl,
       clientID: environment.auth.clientId
     });
   }
 
   private _handleError(err) {
+    this._localLogout(true);
     if (err.error_description) {
       console.error(`Error: ${err.error_description}`);
     } else {

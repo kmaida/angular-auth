@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor
+} from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
@@ -8,6 +13,7 @@ import { mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SecureInterceptor implements HttpInterceptor {
+
   constructor(private auth: AuthService) { }
 
   intercept(
