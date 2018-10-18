@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-secure',
   templateUrl: './secure.component.html',
-  styleUrls: ['./secure.component.css']
+  styles: []
 })
 export class SecureComponent implements OnInit {
   dragons$ = this.api.getDragons$().pipe(

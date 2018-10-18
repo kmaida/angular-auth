@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { throwError } from 'rxjs';
+import { throwError, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -18,10 +18,15 @@ import { catchError } from 'rxjs/operators';
 })
 export class AuthComponent implements OnInit {
   user$ = this.auth.userProfile$.pipe(catchError(err => throwError(err)));
+  authStatusSub: Subscription;
 
   constructor(public auth: AuthService) { }
 
   ngOnInit() {
+    this.authStatusSub = this.auth.authStatus$.subscribe(
+      status => console.log(status),
+      err => console.log(err)
+    );
   }
 
 }

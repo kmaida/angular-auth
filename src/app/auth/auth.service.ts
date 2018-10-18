@@ -24,24 +24,49 @@ export class AuthService {
   token$: Observable<string>;
   // Create stream for user profile data
   userProfile$ = new BehaviorSubject<any>(null);
+  // Create stream for authentication status
+  authStatus = this.isAuthenticated ? 'has_auth_flag' : 'no_auth_flag';
+  authStatus$ = new BehaviorSubject<any>(this.authStatus);
   // Authentication navigation
   logoutUrl = '/';
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
+  // Redirect if entering from a protected route after login
+  redirectAfterLogin: string;
 
   constructor(private router: Router) { }
 
+  setAuthStatus(status: string) {
+    this.authStatus = status;
+    this.authStatus$.next(this.authStatus);
+  }
+
   login() {
-    // @NOTE: cannot bindNodeCallback for this; it causes errors (why?)
-    this._Auth0.popup.authorize({}, (err, authResult) => {
-      if (authResult) {
-        this._localLogin(authResult);
-      } else if (err) {
-        console.log(err);
-        // this._handleError(err);
+    this.setAuthStatus('open_popup');
+    // Open popup and authorize request
+    this._Auth0.popup.authorize({},
+      (err, authResult) => this._authorizeHandler(err, authResult)
+    );
+  }
+
+  private _authorizeHandler(err, authResult) {
+    if (authResult) {
+      this._localLogin(authResult);
+    }
+    if (err) {
+      // If there's an error code present,
+      // pass error to the error handler
+      if (err.code) {
+        this._handleError(err);
+      } else {
+        // If there is no error code present,
+        // this could be something benign;
+        // e.g., user closed the login popup
+        console.log(err.original);
+        this.setAuthStatus('login_canceled');
       }
-    });
+    }
   }
 
   private _localLogin(authResult) {
@@ -52,6 +77,12 @@ export class AuthService {
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating this app is logged in
       localStorage.setItem(this._authFlag, JSON.stringify(true));
+      // Set authStatus for successful login
+      this.setAuthStatus('login_success');
+      // Perform redirect, if one is present
+      if (this.redirectAfterLogin) {
+        this.doRedirect();
+      }
     } else {
       this._localLogout(true);
     }
@@ -61,8 +92,20 @@ export class AuthService {
     return JSON.parse(localStorage.getItem(this._authFlag));
   }
 
+  setRedirect(path: string) {
+    return this.redirectAfterLogin = path;
+  }
+
+  doRedirect() {
+    this.router.navigate([this.redirectAfterLogin]);
+    this.redirectAfterLogin = undefined;
+  }
+
   renewAuth() {
     if (this.isAuthenticated) {
+      // Update authStatus
+      this.setAuthStatus('renew_auth');
+      // Renew authentication session
       this.checkSession$({}).subscribe(
         authResult => this._localLogin(authResult),
         err => this._handleError(err)
@@ -75,15 +118,20 @@ export class AuthService {
     localStorage.setItem(this._authFlag, JSON.stringify(false));
     // Emit null value for user data subject
     this.userProfile$.next(null);
-    // Redirect back to public home if true
+    // Update authStatus
+    this.setAuthStatus('local_logout_complete');
+    // Redirect back to logout URL if true
     if (redirect) {
       this.router.navigate([this.logoutUrl]);
     }
   }
 
   logout() {
+    // Update authStatus
+    this.setAuthStatus('local_logout_begin');
+    // Log out locally
     this._localLogout();
-    // This does a refresh and redirects back to homepage
+    // Auth0 logout does a refresh and redirects back to homepage
     // Make sure you have the logout URL in your Auth0
     // Dashboard Application settings in Allowed Logout URLs
     this._Auth0.logout({
@@ -93,12 +141,11 @@ export class AuthService {
   }
 
   private _handleError(err) {
+    // This function runs if there is an error code present
+    // Update authStatus
+    this.setAuthStatus('login_error');
     this._localLogout(true);
-    if (err.error_description) {
-      console.error(`Error: ${err.error_description}`);
-    } else {
-      console.error(`Error: ${JSON.stringify(err)}`);
-    }
+    console.error(err);
   }
 
 }
