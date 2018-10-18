@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { throwError, Observable, Subscription } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
@@ -20,7 +19,7 @@ import { Router, NavigationEnd } from '@angular/router';
 export class AuthComponent implements OnInit {
   authStatusSub: Subscription;
   routeSub: Subscription;
-  onLoginPage: boolean;
+  hideAuthHeader: boolean;
 
   constructor(
     public auth: AuthService,
@@ -28,15 +27,18 @@ export class AuthComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Simply log authentication status
     this.authStatusSub = this.auth.authStatus$.subscribe(
       status => console.log(status),
       err => console.log(err)
     );
 
+    // Don't show the small header login button on the login page
+    // This page has its own large CTA version of the button
     this.routeSub = this.router.events.subscribe(
       data => {
         if (data instanceof NavigationEnd) {
-          this.onLoginPage = data.url === '/login';
+          this.hideAuthHeader = data.url === '/login';
         }
       }
     );

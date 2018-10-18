@@ -1,4 +1,4 @@
-<nav class="nav justify-content-between mt-2 mx-2 mb-3">
+<nav *ngIf="!hideAuthHeader" class="nav justify-content-between mt-2 mx-2 mb-3">
   <ul class="nav">
     <li class="nav-item">
       <a
@@ -17,7 +17,7 @@
 
   <div id="authContainer" class="ml-3">
     <button
-      *ngIf="!auth.isAuthenticated && !onLoginPage"
+      *ngIf="!auth.isAuthenticated"
       class="btn btn-success btn-sm"
       (click)="auth.login()">Log In</button>
     <span *ngIf="auth.isAuthenticated && (auth.userProfile$ | async) as user">
