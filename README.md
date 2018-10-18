@@ -10,7 +10,7 @@
 1. To create your _free_ Auth0 account, visit [auth0.com](https://auth0.com) and click Sign Up.
 2. Use Google, GitHub, or Microsoft Account to log in.
 
-### Auth0 Application Setup
+### Auth0 Setup
 
 1. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
 2. Name your new app and select "Single Page Web Applications".
@@ -19,12 +19,6 @@
 5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above uses username/password database, Facebook, Google, and Twitter.
 
 > **Note:** If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal.
-
-### Auth0 API Setup
-
-Go to [**APIs**](https://manage.auth0.com/#/apis) in your Auth0 dashboard and click on the "Create API" button. Enter a name for the API. Set the **Identifier** to your API endpoint URL. In this example, this is `http://localhost:3000/api/`. The **Signing Algorithm** should be `RS256`.
-
-We're now ready to implement Auth0 authentication on both our Angular client and Node backend, which provides our API and also serves our Angular application.
 
 ## Installation
 
