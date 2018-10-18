@@ -14,8 +14,8 @@
 
 1. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
 2. Name your new app and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 app, add `http://localhost:3000/callback` to the **Allowed Callback URLs**.
-4. Add `http://localhost:3000` to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
+3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (staging/prod) to the **Allowed Callback URLs**.
+4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (staging/prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
 5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above uses username/password database, Facebook, Google, and Twitter.
 
 > **Note:** If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal.
@@ -55,7 +55,7 @@ From the root of this project, run:
 $ npm run dev
 ```
 
-This will concurrently serve the Angular app using a proxy to the API server. Your app will be available at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes will be watched by the Angular CLI.
+This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via CLI using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the Angular CLI and changes to the API will be watched by nodemon.
 
 ### Staging / Production
 
@@ -65,9 +65,9 @@ To build _and_ serve a production-ready version of the application, from the roo
 $ npm run stage
 ```
 
-This will perform a production build of your Angular application and serve the minified build and API at `http://localhost:3000`. Changes will _not_ be watched.
+This will perform a production build of your Angular application and serve the minified `dist` build and API, available in the browser at `http://localhost:3000`. Changes will _not_ be watched.
 
-If you have _already_ built the project and just want to serve it, you can run:
+If you have _already built_ the Angular app and just want to serve it, you can run:
 
 ```bash
 $ node server
