@@ -12,6 +12,7 @@ import { LoadingComponent } from './loading.component';
 import { ErrorComponent } from './error.component';
 import { DinoComponent } from './pages/home/dino/dino.component';
 import { DragonComponent } from './pages/secure/dragon/dragon.component';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { DragonComponent } from './pages/secure/dragon/dragon.component';
     LoadingComponent,
     ErrorComponent,
     DinoComponent,
-    DragonComponent
+    DragonComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

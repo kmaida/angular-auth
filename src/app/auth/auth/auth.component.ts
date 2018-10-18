@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { throwError, Subscription } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { throwError, Observable, Subscription } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -17,15 +18,27 @@ import { catchError } from 'rxjs/operators';
   `]
 })
 export class AuthComponent implements OnInit {
-  user$ = this.auth.userProfile$.pipe(catchError(err => throwError(err)));
   authStatusSub: Subscription;
+  routeSub: Subscription;
+  onLoginPage: boolean;
 
-  constructor(public auth: AuthService) { }
+  constructor(
+    public auth: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.authStatusSub = this.auth.authStatus$.subscribe(
       status => console.log(status),
       err => console.log(err)
+    );
+
+    this.routeSub = this.router.events.subscribe(
+      data => {
+        if (data instanceof NavigationEnd) {
+          this.onLoginPage = data.url === '/login';
+        }
+      }
     );
   }
 

@@ -1,19 +1,17 @@
-<ng-container *ngIf="auth.isAuthenticated">
-  <ng-template #noToken>
-    <app-loading></app-loading>
+<ng-template #noToken>
+  <app-loading></app-loading>
+</ng-template>
+
+<ng-container *ngIf="(auth.token$ | async) else noToken">
+  <ng-template #noDragons>
+    <app-loading *ngIf="loading"></app-loading>
+    <app-error *ngIf="error"></app-error>
   </ng-template>
 
-  <ng-container *ngIf="(auth.token$ | async) else noToken">
-    <ng-template #noDragons>
-      <app-loading *ngIf="loading"></app-loading>
-      <app-error *ngIf="error"></app-error>
-    </ng-template>
-
-    <ng-container *ngIf="(dragons$ | async) as dragons else noDragons">
-      <h1 class="text-center py-2">🐉 🐲</h1>
-      <ng-container *ngFor="let dragon of dragons">
-        <app-dragon [dragon]="dragon"></app-dragon>
-      </ng-container>
+  <ng-container *ngIf="(dragons$ | async) as dragons else noDragons">
+    <h1 class="text-center py-2">🐉 🐲</h1>
+    <ng-container *ngFor="let dragon of dragons">
+      <app-dragon [dragon]="dragon"></app-dragon>
     </ng-container>
   </ng-container>
 </ng-container>

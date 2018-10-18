@@ -21,7 +21,8 @@ export class AuthService {
   // Track whether or not to renew token
   private _authFlag = 'isLoggedIn';
   // Create stream of token
-  token$: Observable<string>;
+  token: string = null;
+  token$ = new BehaviorSubject<string>(this.token);
   // Create stream for user profile data
   userProfile$ = new BehaviorSubject<any>(null);
   // Create stream for authentication status
@@ -64,6 +65,9 @@ export class AuthService {
         // this could be something benign;
         // e.g., user closed the login popup
         console.log(err.original);
+        // Clear secure stored redirect
+        // since login was canceled
+        this.clearRedirect();
         this.setAuthStatus('login_canceled');
       }
     }
@@ -71,8 +75,8 @@ export class AuthService {
 
   private _localLogin(authResult) {
     if (authResult && authResult.idToken) {
-      // Observable of token
-      this.token$ = of(authResult.idToken);
+      // Emit token
+      this.setToken(authResult.idToken);
       // Emit value for user data subject
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating this app is logged in
@@ -90,6 +94,11 @@ export class AuthService {
 
   get isAuthenticated(): boolean {
     return JSON.parse(localStorage.getItem(this._authFlag));
+  }
+
+  setToken(token: string) {
+    this.token = token;
+    this.token$.next(token);
   }
 
   setRedirect(path: string) {
@@ -118,8 +127,12 @@ export class AuthService {
     localStorage.setItem(this._authFlag, JSON.stringify(false));
     // Emit null value for user data subject
     this.userProfile$.next(null);
+    // Update token
+    this.setToken(null);
     // Update authStatus
     this.setAuthStatus('local_logout_complete');
+    // Clear secure stored redirect, if there is one leftover
+    this.clearRedirect();
     // Redirect back to logout URL if true
     if (redirect) {
       this.router.navigate([this.logoutUrl]);
@@ -146,6 +159,10 @@ export class AuthService {
     this.setAuthStatus('login_error');
     this._localLogout(true);
     console.error(err);
+  }
+
+  clearRedirect() {
+    this.setRedirect(undefined);
   }
 
 }
