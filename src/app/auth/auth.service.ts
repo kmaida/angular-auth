@@ -18,30 +18,27 @@ export class AuthService {
     redirectUri: environment.auth.redirect,
     scope: 'openid profile email'
   });
-  // Track whether or not to renew token
+  // Track whether app thinks it's logged in locally;
+  // used to determine whether or not to allow route access
+  // and to decide if authentication renewal should run
   private _authFlag = 'isLoggedIn';
   // Create stream of token
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
-  // Create stream for user profile data
+  // Create stream of user profile data
   userProfile$ = new BehaviorSubject<any>(null);
-  // Create stream for authentication status
+  // Create stream of authentication status
   authStatus = this.isAuthenticated ? 'has_auth_flag' : 'no_auth_flag';
-  authStatus$ = new BehaviorSubject<any>(this.authStatus);
+  authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Authentication navigation
   logoutUrl = '/';
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
-  // Redirect if entering from a protected route after login
+  // Store redirect path if entering from a protected route
   redirectAfterLogin: string;
 
   constructor(private router: Router) { }
-
-  setAuthStatus(status: string) {
-    this.authStatus = status;
-    this.authStatus$.next(this.authStatus);
-  }
 
   login() {
     this.setAuthStatus('open_popup');
@@ -56,20 +53,29 @@ export class AuthService {
       this._localLogin(authResult);
     }
     if (err) {
-      // If there's an error code present,
-      // pass error to the error handler
+      // If error code present, pass error to the error handler
       if (err.code) {
         this._handleError(err);
       } else {
-        // If there is no error code present,
-        // this could be something benign;
+        // If no error code present, could be benign,
         // e.g., user closed the login popup
         console.log(err.original);
-        // Clear secure stored redirect
-        // since login was canceled
+        // Clear secure stored redirect (login canceled)
         this.clearRedirect();
         this.setAuthStatus('login_canceled');
       }
+    }
+  }
+
+  renewAuth() {
+    if (this.isAuthenticated) {
+      // Update authStatus stating auth renewal begun
+      this.setAuthStatus('renew_auth');
+      // App thinks it's logged in; attempt renew auth session
+      this.checkSession$({}).subscribe(
+        authResult => this._localLogin(authResult),
+        err => this._handleError(err)
+      );
     }
   }
 
@@ -79,9 +85,9 @@ export class AuthService {
       this.setToken(authResult.idToken);
       // Emit value for user data subject
       this.userProfile$.next(authResult.idTokenPayload);
-      // Set flag in local storage stating this app is logged in
+      // Set flag in local storage stating app is logged in
       localStorage.setItem(this._authFlag, JSON.stringify(true));
-      // Set authStatus for successful login
+      // Emit successful login
       this.setAuthStatus('login_success');
       // Perform redirect, if one is present
       if (this.redirectAfterLogin) {
@@ -92,60 +98,31 @@ export class AuthService {
     }
   }
 
-  get isAuthenticated(): boolean {
-    return JSON.parse(localStorage.getItem(this._authFlag));
-  }
-
-  setToken(token: string) {
-    this.token = token;
-    this.token$.next(token);
-  }
-
-  setRedirect(path: string) {
-    return this.redirectAfterLogin = path;
-  }
-
-  doRedirect() {
-    this.router.navigate([this.redirectAfterLogin]);
-    this.redirectAfterLogin = undefined;
-  }
-
-  renewAuth() {
-    if (this.isAuthenticated) {
-      // Update authStatus
-      this.setAuthStatus('renew_auth');
-      // Renew authentication session
-      this.checkSession$({}).subscribe(
-        authResult => this._localLogin(authResult),
-        err => this._handleError(err)
-      );
-    }
-  }
-
   private _localLogout(redirect?: boolean) {
-    // Set authentication status flag in local storage to false
+    // Local logout process has begun
+    this.setAuthStatus('local_logout_begin');
+    // Set auth status flag in local storage to false
     localStorage.setItem(this._authFlag, JSON.stringify(false));
     // Emit null value for user data subject
     this.userProfile$.next(null);
-    // Update token
+    // Emit null value for token
     this.setToken(null);
-    // Update authStatus
-    this.setAuthStatus('local_logout_complete');
     // Clear secure stored redirect, if there is one leftover
     this.clearRedirect();
-    // Redirect back to logout URL if true
+    // Emit value stating local app logout is complete
+    this.setAuthStatus('local_logout_complete');
+    // Redirect back to logout URL if param set
     if (redirect) {
       this.router.navigate([this.logoutUrl]);
     }
   }
 
   logout() {
-    // Update authStatus
-    this.setAuthStatus('local_logout_begin');
-    // Log out locally
+    // Log out of this app (local logout doesn't affect auth server)
     this._localLogout();
-    // Auth0 logout does a refresh and redirects back to homepage
-    // Make sure you have the logout URL in your Auth0
+    // Perform auth server logout next:
+    // Auth0 logout does a full page redirect
+    // Make sure you have full logout URL in your Auth0
     // Dashboard Application settings in Allowed Logout URLs
     this._Auth0.logout({
       returnTo: environment.auth.logoutUrl,
@@ -154,11 +131,33 @@ export class AuthService {
   }
 
   private _handleError(err) {
-    // This function runs if there is an error code present
-    // Update authStatus
+    // Runs if there is an error code present
     this.setAuthStatus('login_error');
     this._localLogout(true);
     console.error(err);
+  }
+
+  get isAuthenticated(): boolean {
+    return JSON.parse(localStorage.getItem(this._authFlag));
+  }
+
+  setAuthStatus(status: string) {
+    this.authStatus = status;
+    this.authStatus$.next(this.authStatus);
+  }
+
+  setToken(token: string) {
+    this.token = token;
+    this.token$.next(token);
+  }
+
+  setRedirect(path: string) {
+    this.redirectAfterLogin = path;
+  }
+
+  doRedirect() {
+    this.router.navigate([this.redirectAfterLogin]);
+    this.redirectAfterLogin = undefined;
   }
 
   clearRedirect() {
