@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, bindNodeCallback } from 'rxjs';
+import { BehaviorSubject, bindNodeCallback, timer, of, Subscription } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import * as auth0 from 'auth0-js';
 import { environment } from './../../environments/environment';
 import { Router } from '@angular/router';
@@ -28,7 +29,7 @@ export class AuthService {
   // Create stream of user profile data
   userProfile$ = new BehaviorSubject<any>(null);
   // Create stream of authentication status
-  authStatus = this.isAuthenticated ? 'has_auth_flag' : 'no_auth_flag';
+  authStatus = this.isAuthenticated ? 'init_with_auth_flag' : 'init_no_auth_flag';
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Authentication navigation
   logoutUrl = '/';
@@ -37,6 +38,9 @@ export class AuthService {
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
   // Store redirect path if entering from a protected route
   redirectAfterLogin: string;
+  // Token expiration
+  tokenExp: number;
+  refreshSub: Subscription;
 
   constructor(private router: Router) { }
 
@@ -81,12 +85,16 @@ export class AuthService {
 
   private _localLogin(authResult) {
     if (authResult && authResult.idToken) {
-      // Emit token
+      // Set token expiration
+      this.tokenExp = authResult.idTokenPayload.exp * 1000;
+      // Set token in local property and emit in stream
       this.setToken(authResult.idToken);
       // Emit value for user data subject
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating app is logged in
       localStorage.setItem(this._authFlag, JSON.stringify(true));
+      // Schedule silent token renewal
+      this.scheduleRenewal();
       // Emit successful login
       this.setAuthStatus('login_success');
       // Perform redirect, if one is present
@@ -107,6 +115,8 @@ export class AuthService {
     this.userProfile$.next(null);
     // Emit null value for token
     this.setToken(null);
+    // Unschedule silent token renewal
+    this.unscheduleRenewal();
     // Clear secure stored redirect, if there is one leftover
     this.clearRedirect();
     // Emit value stating local app logout is complete
@@ -130,6 +140,41 @@ export class AuthService {
     });
   }
 
+  scheduleRenewal() {
+    // If token isn't valid, then do nothing
+    if (!this.isAuthenticated || !this.tokenValid) { return; }
+    // Unsubscribe from previous expiration observable
+    this.unscheduleRenewal();
+    // Update authStatus to show scheduling of auto token renewal
+    this.setAuthStatus('schedule_silent_auth_renewal');
+    // Create and subscribe to expiration observable
+    const _expiresIn$ = of(this.tokenExp).pipe(
+      mergeMap(
+        expires => {
+          const now = Date.now();
+          // Use timer to track delay until expiration
+          // to run the refresh at the proper time
+          return timer(Math.max(1, expires - now));
+        }
+      )
+    );
+
+    this.refreshSub = _expiresIn$.subscribe(
+      () => {
+        this.setAuthStatus('start_silent_auth_renewal');
+        this.renewAuth();
+        this.scheduleRenewal();
+      }
+    );
+  }
+
+  unscheduleRenewal() {
+    if (this.refreshSub) {
+      this.setAuthStatus('remove_silent_auth_renewal');
+      this.refreshSub.unsubscribe();
+    }
+  }
+
   private _handleError(err) {
     // Runs if there is an error code present
     this.setAuthStatus('login_error');
@@ -139,6 +184,12 @@ export class AuthService {
 
   get isAuthenticated(): boolean {
     return JSON.parse(localStorage.getItem(this._authFlag));
+  }
+
+  get tokenValid(): boolean {
+    console.log(Date.now(), this.tokenExp);
+    // Check if current time is past token's expiration
+    return Date.now() < this.tokenExp;
   }
 
   setAuthStatus(status: string) {
