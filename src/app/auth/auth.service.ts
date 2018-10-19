@@ -183,11 +183,11 @@ export class AuthService {
   }
 
   get isAuthenticated(): boolean {
+    // Check if the Angular app thinks this user is authenticated
     return JSON.parse(localStorage.getItem(this._authFlag));
   }
 
   get tokenValid(): boolean {
-    console.log(Date.now(), this.tokenExp);
     // Check if current time is past token's expiration
     return Date.now() < this.tokenExp;
   }
@@ -208,7 +208,7 @@ export class AuthService {
 
   doRedirect() {
     this.router.navigate([this.redirectAfterLogin]);
-    this.redirectAfterLogin = undefined;
+    this.clearRedirect();
   }
 
   clearRedirect() {

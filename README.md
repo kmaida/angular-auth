@@ -49,7 +49,7 @@ From the root of this project, run:
 $ npm run dev
 ```
 
-This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via CLI using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the Angular CLI and changes to the API will be watched by nodemon.
+This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via CLI using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the [Angular CLI](https://cli.angular.io) and changes to the API will be watched by nodemon.
 
 ### Staging / Production
 
@@ -66,6 +66,26 @@ If you have _already built_ the Angular app and just want to serve it, you can r
 ```bash
 $ node server
 ```
+
+## Authentication Stream
+
+This project supplies a stream of authentication events (called `authStatus$` and available in the `auth.service.ts` file) that you can subscribe to in order to follow the authentication flow in your browser's console when developing the application.
+
+You can also see the current status of the authentication flow via the `authStatus` property supplied by `auth.service.ts`.
+
+### Auth Status Events
+
+* `init_no_auth_flag` - application initialized, no knowledge of an authenticated user ("logged out" state)
+* `init_with_auth_flag` - application initialized, flag set in local storage indicating that this app believes a user was logged in previously and has not logged out (meaning they might have a valid session on the authorization server; authentication data not available in the front end yet)
+* `open_popup` - authentication popup has been opened (`login()` method called)
+* `login_canceled` - authentication canceled before it could complete (e.g., the user closed the popup window without logging in)
+* `renew_auth` - app is requesting authentication information from the authorization server silently, either to restore a previous session or to silently renew an expired token
+* `schedule_silent_auth_renewal` - silent token renewal has been scheduled so if the user's token expires during a session, it will be silently renewed as long as their authorization server session is valid
+* `login_success` - user has successfully been authenticated
+* `local_logout_begin` - initializing logout locally in the Angular application
+* `local_logout_complete` - authentication data has been cleared locally in the Angular application (when authorization server logout takes place, the app will perform a full-page redirect)
+* `start_silent_auth_renewal` - token is expiring; silently requesting a fresh token from the authorization server
+* `remove_silent_auth_renewal` - unsubscribe from automatic token renewal
 
 ## What is Auth0?
 
