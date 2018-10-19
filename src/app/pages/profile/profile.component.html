@@ -1,11 +1,12 @@
 <ng-template #noProfile>
-  <app-loading></app-loading>
+  <app-loading *ngIf="loading"></app-loading>
+  <app-error *ngIf="error"></app-error>
 </ng-template>
 
-<ng-container *ngIf="(auth.userProfile$ | async) as user else noProfile">
+<ng-container *ngIf="(user$ | async) as user else noProfile">
   <h2>{{ user.name }}</h2>
   <ul>
-    <li *ngFor="let profileProp of makeProfileArray(user)">
+    <li *ngFor="let profileProp of makeArray(user)">
       <code>{{ profileProp }}</code>
     </li>
   </ul>

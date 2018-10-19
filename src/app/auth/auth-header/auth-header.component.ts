@@ -4,19 +4,18 @@ import { Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
-  selector: 'app-auth',
-  templateUrl: './auth.component.html',
+  selector: 'app-auth-header',
+  templateUrl: './auth-header.component.html',
   styles: [`
     img {
       border-radius: 100px;
-      display: inline-block;
       height: 30px;
       width: 30px;
     }
     .active { font-weight: bold; }
   `]
 })
-export class AuthComponent implements OnInit {
+export class AuthHeaderComponent implements OnInit {
   authStatusSub: Subscription;
   routeSub: Subscription;
   hideAuthHeader: boolean;

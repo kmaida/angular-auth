@@ -7,11 +7,12 @@ import { AuthService } from './auth/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
   constructor(public auth: AuthService) {}
 
   ngOnInit() {
-    // If there is an active session on the
-    // authorization server, get tokens
+    // If the app believes there is an active session
+    // on Auth0 authorization server, attempt to renew auth
     this.auth.renewAuth();
   }
 }

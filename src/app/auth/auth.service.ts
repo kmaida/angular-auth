@@ -56,7 +56,6 @@ export class AuthService {
 
   private _authorizeHandleErr(err) {
     if (err.code) {
-      // If error code present, go to full error handler
       this._handleError(err);
     } else {
       // If no error code present, could be benign:

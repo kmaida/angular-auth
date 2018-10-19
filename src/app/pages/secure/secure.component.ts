@@ -15,7 +15,6 @@ export class SecureComponent implements OnInit {
       err => {
         this.loading = false;
         this.error = true;
-        console.log(err);
       }
     )
   );

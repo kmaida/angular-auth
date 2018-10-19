@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SecureComponent } from './pages/secure/secure.component';
-import { AuthComponent } from './auth/auth/auth.component';
+import { AuthHeaderComponent } from './auth/auth-header/auth-header.component';
 import { LoadingComponent } from './loading.component';
 import { ErrorComponent } from './error.component';
 import { DinoComponent } from './pages/home/dino/dino.component';
@@ -20,7 +20,7 @@ import { LoginComponent } from './pages/login/login.component';
     HomeComponent,
     ProfileComponent,
     SecureComponent,
-    AuthComponent,
+    AuthHeaderComponent,
     LoadingComponent,
     ErrorComponent,
     DinoComponent,
