@@ -10,8 +10,9 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   // Create Auth0 web auth instance
-  // @TODO: Update environment variables and remove .example
-  // extension in src/environments/environment.ts.example
+  // @TODO: Update environment variables and remove .sample
+  // extension in src/environments/environment.ts.sample
+  // and src/environments/environment.prod.ts.sample
   private _Auth0 = new auth0.WebAuth({
     clientID: environment.auth.clientId,
     domain: environment.auth.domain,
@@ -144,7 +145,7 @@ export class AuthService {
     this.unscheduleRenewal();
     // Scheduling of auto token renewal has begun
     this.setAuthStatus('schedule_silent_auth_renewal');
-    // Create and subscribe to expiration observable
+    // Create and subscribe to expiration timer observable
     const _expiresIn$ = of(this.tokenExp).pipe(
       mergeMap(
         expires => {
@@ -155,7 +156,6 @@ export class AuthService {
         }
       )
     );
-
     this.refreshSub = _expiresIn$.subscribe(
       () => {
         this.setAuthStatus('start_silent_auth_renewal');
@@ -185,7 +185,7 @@ export class AuthService {
   }
 
   get tokenValid(): boolean {
-    // Check if current time is past token's expiration
+    // Check if current datetime is before token expiration
     return Date.now() < this.tokenExp;
   }
 
