@@ -33,6 +33,9 @@ export class AuthService {
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Authentication navigation
   logoutUrl = '/';
+  // Create observable of Auth0 popup.authorize method
+  // to open a popup that will allow user to log into auth server
+  popupAuthorize$ = bindNodeCallback(this._Auth0.popup.authorize.bind(this._Auth0.popup));
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
@@ -46,28 +49,24 @@ export class AuthService {
 
   login() {
     this.setAuthStatus('open_popup');
-    // Open popup and authorize request
-    this._Auth0.popup.authorize({},
-      (err, authResult) => this._authorizeHandler(err, authResult)
+    this.popupAuthorize$({}).subscribe(
+      authResult => this._localLogin(authResult),
+      err => this._authorizeErrHandler(err)
     );
   }
 
-  private _authorizeHandler(err, authResult) {
-    if (authResult) {
-      this._localLogin(authResult);
-    }
-    if (err) {
-      // If error code present, pass error to the error handler
-      if (err.code) {
-        this._handleError(err);
-      } else {
-        // If no error code present, could be benign,
-        // e.g., user closed the login popup
-        console.log(err.original);
-        // Clear secure stored redirect (login canceled)
-        this.clearRedirect();
-        this.setAuthStatus('login_canceled');
-      }
+  private _authorizeErrHandler(err) {
+    // If error code present, pass error to the error handler
+    if (err.code) {
+      this._handleError(err);
+    } else {
+      // If no error code present, could be benign,
+      // e.g., user closed the login popup
+      const _logErr = err.original ? err.original : err;
+      console.log(_logErr);
+      // Clear secure stored redirect (login canceled)
+      this.clearRedirect();
+      this.setAuthStatus('login_canceled');
     }
   }
 
@@ -176,7 +175,7 @@ export class AuthService {
   }
 
   private _handleError(err) {
-    // Runs if there is an error code present
+    // If there is an error code present, log out locally
     this.setAuthStatus('login_error');
     this._localLogout(true);
     console.error(err);
