@@ -32,6 +32,8 @@ if (process.env.NODE_ENV !== 'dev') {
 }
 
 // Set static path to callback popup authentication window
+// (This static page will auto-close the popup once authentication is completed)
+// For more info: https://community.auth0.com/t/auth0-js-popup-autoclose/7365/2
 app.use('/callback', express.static(path.join(__dirname, './callback')));
 
 /*
@@ -43,7 +45,7 @@ app.use('/callback', express.static(path.join(__dirname, './callback')));
 require('./api/routes')(app, config);
 
 // Pass routing to Angular app
-// Don't run in dev
+// (Don't run in dev)
 if (process.env.NODE_ENV !== 'dev') {
   app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, '/dist/angular-authentication/index.html'));
