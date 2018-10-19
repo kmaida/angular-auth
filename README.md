@@ -16,7 +16,7 @@
 2. Name your new app and select "Single Page Web Applications".
 3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (staging/prod) to the **Allowed Callback URLs**.
 4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (staging/prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
-5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab. The example shown in the screenshot above uses username/password database, Facebook, Google, and Twitter.
+5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social). You can then enable them for your app in the **Application** options under the **Connections** tab.
 
 > **Note:** If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal.
 
@@ -49,7 +49,7 @@ From the root of this project, run:
 $ npm run dev
 ```
 
-This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via CLI using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the [Angular CLI](https://cli.angular.io) and changes to the API will be watched by nodemon.
+This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via the [Angular CLI](https://cli.angular.io) using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the Angular CLI and changes to the API will be watched by nodemon.
 
 ### Staging / Production
 
@@ -76,15 +76,15 @@ You can also see the current status of the authentication flow via the `authStat
 ### Auth Status Events
 
 * `init_no_auth_flag` - application initialized, no knowledge of an authenticated user ("logged out" state)
-* `init_with_auth_flag` - application initialized, flag set in local storage indicating that this app believes a user was logged in previously and has not logged out (meaning they might have a valid session on the authorization server; authentication data not available in the front end yet)
-* `open_popup` - authentication popup has been opened (`login()` method called)
+* `init_with_auth_flag` - application initialized, simple flag already exists in local storage indicating that this app believes a user was logged in previously and has not logged out (meaning they might have a valid session on the authorization server; authentication data not available in the front end yet)
+* `open_popup` - authentication popup has been opened (`login()` method was called)
 * `login_canceled` - authentication canceled before it could complete (e.g., the user closed the popup window without logging in)
 * `renew_auth` - app is requesting authentication information from the authorization server silently, either to restore a previous session or to silently renew an expired token
 * `schedule_silent_auth_renewal` - silent token renewal has been scheduled so if the user's token expires during a session, it will be silently renewed as long as their authorization server session is valid
 * `login_success` - user has successfully been authenticated
 * `local_logout_begin` - initializing logout locally in the Angular application
-* `local_logout_complete` - authentication data has been cleared locally in the Angular application (when authorization server logout takes place, the app will perform a full-page redirect)
-* `start_silent_auth_renewal` - token is expiring; silently requesting a fresh token from the authorization server
+* `local_logout_complete` - authentication data has been cleared _locally_ in the Angular application (note: when _authorization server logout_ takes place, the app will perform a full-page redirect)
+* `start_silent_auth_renewal` - token is expiring; begin silently requesting a fresh token from the authorization server
 * `remove_silent_auth_renewal` - unsubscribe from automatic token renewal
 
 ## What is Auth0?
