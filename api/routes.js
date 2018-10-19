@@ -36,6 +36,11 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
+  // Simulate live server call by adding random delay
+  function delay() {
+    return Math.random() * 2500;
+  }
+
   // GET API root
   app.get('/api/', (req, res) => {
     res.send('API works');
@@ -43,12 +48,16 @@ module.exports = function(app, config) {
 
   // GET public data (dinosaurs)
   app.get('/api/public', (req, res) => {
-    res.json(dinosData)
+    setTimeout(() => {
+      res.json(dinosData);
+    }, delay());
   });
 
   // GET secure data (dragons)
   app.get('/api/secure', authCheck, (req, res) => {
-    res.json(dragonsData);
+    setTimeout(() => {
+      res.json(dragonsData);
+    }, delay());
   });
 
 };

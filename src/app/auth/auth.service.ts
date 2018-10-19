@@ -19,9 +19,7 @@ export class AuthService {
     redirectUri: environment.auth.redirect,
     scope: 'openid profile email'
   });
-  // Track whether app thinks it's logged in locally;
-  // used to determine whether or not to allow route access
-  // and to decide if authentication renewal should run
+  // LocalStorage prop to track whether app thinks it's logged in locally
   private _authFlag = 'isLoggedIn';
   // Create stream of token
   token: string = null;
@@ -33,15 +31,15 @@ export class AuthService {
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Authentication navigation
   logoutUrl = '/';
-  // Create observable of Auth0 popup.authorize method
-  // to open a popup that will allow user to log into auth server
+  // Create observable of Auth0 popup.authorize method to
+  // open popup prompting user to log into Auth0 auth server
   popupAuthorize$ = bindNodeCallback(this._Auth0.popup.authorize.bind(this._Auth0.popup));
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
-  // Store redirect path if entering from a protected route
+  // Redirect path for if user entering app from protected route
   redirectAfterLogin: string;
-  // Token expiration
+  // Token expiration management
   tokenExp: number;
   refreshSub: Subscription;
 
@@ -51,17 +49,17 @@ export class AuthService {
     this.setAuthStatus('open_popup');
     this.popupAuthorize$({}).subscribe(
       authResult => this._localLogin(authResult),
-      err => this._authorizeErrHandler(err)
+      err => this._authorizeHandleErr(err)
     );
   }
 
-  private _authorizeErrHandler(err) {
-    // If error code present, pass error to the error handler
+  private _authorizeHandleErr(err) {
     if (err.code) {
+      // If error code present, go to full error handler
       this._handleError(err);
     } else {
-      // If no error code present, could be benign,
-      // e.g., user closed the login popup
+      // If no error code present, could be benign:
+      // e.g., maybe user closed the login popup
       const _logErr = err.original ? err.original : err;
       console.log(_logErr);
       // Clear secure stored redirect (login canceled)
@@ -72,9 +70,9 @@ export class AuthService {
 
   renewAuth() {
     if (this.isAuthenticated) {
-      // Update authStatus stating auth renewal begun
+      // App (locally) believes a user is logged in
       this.setAuthStatus('renew_auth');
-      // App thinks it's logged in; attempt renew auth session
+      // Check Auth0 authorization server session
       this.checkSession$({}).subscribe(
         authResult => this._localLogin(authResult),
         err => this._handleError(err)
@@ -83,55 +81,55 @@ export class AuthService {
   }
 
   private _localLogin(authResult) {
-    if (authResult && authResult.idToken) {
+    if (authResult && authResult.idToken && authResult.idTokenPayload) {
       // Set token expiration
       this.tokenExp = authResult.idTokenPayload.exp * 1000;
       // Set token in local property and emit in stream
       this.setToken(authResult.idToken);
-      // Emit value for user data subject
+      // Emit value for user profile stream
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating app is logged in
       localStorage.setItem(this._authFlag, JSON.stringify(true));
-      // Schedule silent token renewal
+      // Set up silent token renewal for this browser session
       this.scheduleRenewal();
-      // Emit successful login
+      // Login has succeeded!
       this.setAuthStatus('login_success');
-      // Perform redirect, if one is present
+      // Perform redirect to protected route, if necessary
       if (this.redirectAfterLogin) {
         this.doRedirect();
       }
     } else {
+      // Something was missing from expected authResult
       this._localLogout(true);
     }
   }
 
   private _localLogout(redirect?: boolean) {
-    // Local logout process has begun
     this.setAuthStatus('local_logout_begin');
-    // Set auth status flag in local storage to false
+    // Set auth status flag to false
     localStorage.setItem(this._authFlag, JSON.stringify(false));
-    // Emit null value for user data subject
+    // User data is no longer available
     this.userProfile$.next(null);
-    // Emit null value for token
+    // Token is no longer available
     this.setToken(null);
     // Unschedule silent token renewal
     this.unscheduleRenewal();
-    // Clear secure stored redirect, if there is one leftover
+    // Clear login redirect, if there was one
     this.clearRedirect();
-    // Emit value stating local app logout is complete
+    // Local app logout is complete
     this.setAuthStatus('local_logout_complete');
-    // Redirect back to logout URL if param set
+    // Redirect back to logout URL (if param set)
     if (redirect) {
       this.router.navigate([this.logoutUrl]);
     }
   }
 
   logout() {
-    // Log out of this app (local logout doesn't affect auth server)
+    // Remove authentication data from Angular app
     this._localLogout();
-    // Perform auth server logout next:
-    // Auth0 logout does a full page redirect
-    // Make sure you have full logout URL in your Auth0
+    // Perform Auth0 authorization server logout next:
+    // Auth0 logout does a full page redirect, so
+    // make sure you have full logout URL in your Auth0
     // Dashboard Application settings in Allowed Logout URLs
     this._Auth0.logout({
       returnTo: environment.auth.logoutUrl,
@@ -140,11 +138,11 @@ export class AuthService {
   }
 
   scheduleRenewal() {
-    // If token isn't valid, then do nothing
+    // If app thinks it's not logged in or token isn't valid, do nothing
     if (!this.isAuthenticated || !this.tokenValid) { return; }
-    // Unsubscribe from previous expiration observable
+    // Clean up any previous token renewal
     this.unscheduleRenewal();
-    // Update authStatus to show scheduling of auto token renewal
+    // Scheduling of auto token renewal has begun
     this.setAuthStatus('schedule_silent_auth_renewal');
     // Create and subscribe to expiration observable
     const _expiresIn$ = of(this.tokenExp).pipe(
