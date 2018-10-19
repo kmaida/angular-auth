@@ -18,9 +18,9 @@
 4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (staging/prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**.* Click the "Save Changes" button.
 5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social).† You can then enable them for your app in the **Application** options under the **Connections** tab.
 
-* _You could set up separate Auth0 Applications for development and staging / production if you prefer._
+*_You could set up separate Auth0 Applications for development and staging / production if you prefer._
 
-† _If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
+†_If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
 ## Installation
 
@@ -42,7 +42,7 @@ $ npm install
 2. Open `/src/app/environments/environment.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
 3. Open `/src/app/environments/environment.prod.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
 
-> **Note:** You could set up different Auth0 Applications for development and staging or production if you prefer.
+> **Note:** If you used different Auth0 Applications for development and staging / production, `[YOUR_CLIENT_ID]` will differ between environment files.
 
 ## Serving the Project
 
