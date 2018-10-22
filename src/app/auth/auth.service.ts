@@ -13,7 +13,7 @@ export class AuthService {
   // @TODO: Update environment variables and remove .sample
   // extension in src/environments/environment.ts.sample
   // and src/environments/environment.prod.ts.sample
-  private _Auth0 = new auth0.WebAuth({
+  private Auth0 = new auth0.WebAuth({
     clientID: environment.auth.clientId,
     domain: environment.auth.domain,
     responseType: 'id_token',
@@ -21,7 +21,10 @@ export class AuthService {
     scope: 'openid profile email'
   });
   // LocalStorage prop to track whether app thinks it's logged in locally
-  private _authFlag = 'isLoggedIn';
+  private authFlag = 'isLoggedIn';
+  // LocalStorage prop to track redirect after login
+  private rd = 'redirect';
+  authRedirect: string;
   // Create stream of token
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
@@ -32,14 +35,12 @@ export class AuthService {
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Authentication navigation
   logoutUrl = '/';
-  // Create observable of Auth0 popup.authorize method to
-  // open popup prompting user to log into Auth0 auth server
-  popupAuthorize$ = bindNodeCallback(this._Auth0.popup.authorize.bind(this._Auth0.popup));
+  authSuccessUrl = '/';
+  // Create observable of Auth0 parseHash method to gather auth results
+  parseHash$ = bindNodeCallback(this.Auth0.parseHash.bind(this.Auth0));
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
-  checkSession$ = bindNodeCallback(this._Auth0.checkSession.bind(this._Auth0));
-  // Redirect path for if user entering app from protected route
-  redirectAfterLogin: string;
+  checkSession$ = bindNodeCallback(this.Auth0.checkSession.bind(this.Auth0));
   // Token expiration management
   tokenExp: number;
   refreshSub: Subscription;
@@ -47,24 +48,19 @@ export class AuthService {
   constructor(private router: Router) { }
 
   login() {
-    this.setAuthStatus('open_popup');
-    this.popupAuthorize$({}).subscribe(
-      authResult => this._localLogin(authResult),
-      err => this._authorizeHandleErr(err)
-    );
+    this.Auth0.authorize();
   }
 
-  private _authorizeHandleErr(err) {
-    if (err.code) {
-      this._handleError(err);
-    } else {
-      // If no error code present, could be benign:
-      // e.g., maybe user closed the login popup
-      const _logErr = err.original ? err.original : err;
-      console.log(_logErr);
-      // Clear secure stored redirect (login canceled)
-      this.clearRedirect();
-      this.setAuthStatus('login_canceled');
+  handleLoginCallback() {
+    if (window.location.hash && !this.isAuthenticated) {
+      this.parseHash$({}).subscribe(
+        authResult => {
+          window.location.hash = '';
+          this.localLogin(authResult);
+          this.navigateAfterHashParse();
+        },
+        err => this.handleError(err)
+      );
     }
   }
 
@@ -74,13 +70,13 @@ export class AuthService {
       this.setAuthStatus('renew_auth');
       // Check Auth0 authorization server session
       this.checkSession$({}).subscribe(
-        authResult => this._localLogin(authResult),
-        err => this._handleError(err)
+        authResult => this.localLogin(authResult),
+        err => this.handleError(err)
       );
     }
   }
 
-  private _localLogin(authResult) {
+  private localLogin(authResult) {
     if (authResult && authResult.idToken && authResult.idTokenPayload) {
       // Set token expiration
       this.tokenExp = authResult.idTokenPayload.exp * 1000;
@@ -89,25 +85,21 @@ export class AuthService {
       // Emit value for user profile stream
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating app is logged in
-      localStorage.setItem(this._authFlag, JSON.stringify(true));
+      localStorage.setItem(this.authFlag, JSON.stringify(true));
       // Set up silent token renewal for this browser session
       this.scheduleRenewal();
       // Login has succeeded!
       this.setAuthStatus('login_success');
-      // Perform redirect to protected route, if necessary
-      if (this.redirectAfterLogin) {
-        this.doRedirect();
-      }
     } else {
       // Something was missing from expected authResult
-      this._localLogout(true);
+      this.localLogout(true);
     }
   }
 
-  private _localLogout(redirect?: boolean) {
+  private localLogout(redirect?: boolean) {
     this.setAuthStatus('local_logout_begin');
     // Set auth status flag to false
-    localStorage.setItem(this._authFlag, JSON.stringify(false));
+    localStorage.setItem(this.authFlag, JSON.stringify(false));
     // User data is no longer available
     this.userProfile$.next(null);
     // Token is no longer available
@@ -120,18 +112,19 @@ export class AuthService {
     this.setAuthStatus('local_logout_complete');
     // Redirect back to logout URL (if param set)
     if (redirect) {
+      console.log('redirecting');
       this.router.navigate([this.logoutUrl]);
     }
   }
 
   logout() {
     // Remove authentication data from Angular app
-    this._localLogout();
+    this.localLogout();
     // Perform Auth0 authorization server logout next:
     // Auth0 logout does a full page redirect, so
     // make sure you have full logout URL in your Auth0
     // Dashboard Application settings in Allowed Logout URLs
-    this._Auth0.logout({
+    this.Auth0.logout({
       returnTo: environment.auth.logoutUrl,
       clientID: environment.auth.clientId
     });
@@ -145,7 +138,7 @@ export class AuthService {
     // Scheduling of auto token renewal has begun
     this.setAuthStatus('schedule_silent_auth_renewal');
     // Create and subscribe to expiration timer observable
-    const _expiresIn$ = of(this.tokenExp).pipe(
+    const expiresIn$ = of(this.tokenExp).pipe(
       mergeMap(
         expires => {
           const now = Date.now();
@@ -155,7 +148,7 @@ export class AuthService {
         }
       )
     );
-    this.refreshSub = _expiresIn$.subscribe(
+    this.refreshSub = expiresIn$.subscribe(
       () => {
         this.setAuthStatus('start_silent_auth_renewal');
         this.renewAuth();
@@ -171,16 +164,16 @@ export class AuthService {
     }
   }
 
-  private _handleError(err) {
+  private handleError(err) {
     // If there is an error code present, log out locally
     this.setAuthStatus('login_error');
-    this._localLogout(true);
+    this.localLogout(true);
     console.error(err);
   }
 
   get isAuthenticated(): boolean {
     // Check if the Angular app thinks this user is authenticated
-    return JSON.parse(localStorage.getItem(this._authFlag));
+    return JSON.parse(localStorage.getItem(this.authFlag));
   }
 
   get tokenValid(): boolean {
@@ -199,16 +192,25 @@ export class AuthService {
   }
 
   setRedirect(path: string) {
-    this.redirectAfterLogin = path;
+    this.authRedirect = !!path ? path : '/';
+    localStorage.setItem(this.rd, this.authRedirect);
   }
 
-  doRedirect() {
-    this.router.navigate([this.redirectAfterLogin]);
-    this.clearRedirect();
+  // When trying to access a protected route,
+  // user will be prompted to log in first.
+  // After login, they can be redirected
+  private navigateAfterHashParse() {
+    const redirect = localStorage.getItem(this.rd);
+    if (redirect) {
+      this.router.navigateByUrl(redirect);
+      this.clearRedirect();
+    } else {
+      this.router.navigate([this.authSuccessUrl]);
+    }
   }
 
   clearRedirect() {
-    this.setRedirect(undefined);
+    localStorage.removeItem(this.rd);
   }
 
 }

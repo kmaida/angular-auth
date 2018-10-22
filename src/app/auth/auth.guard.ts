@@ -35,14 +35,11 @@ export class AuthGuard implements CanActivate {
       // KISS solution is to check for "token$ | async" in template
       // of protected pages and display content once it becomes available.
       return true;
-    } else {
-      // If the user does NOT have a local login flag:
-      // save the secure path to redirect to after successful login;
-      // redirection then happens in the auth service.
-      this.auth.setRedirect(state.url);
-      this.router.navigate(['/login']);
-      return false;
     }
+    // Save secure path to redirect to after successful login and prompt to log in
+    this.auth.setRedirect(state.url);
+    this.auth.login();
+    return false;
   }
 
 }

@@ -7,7 +7,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
 import { SecureComponent } from './pages/secure/secure.component';
-import { LoginComponent } from './pages/login/login.component';
+import { CallbackComponent } from './pages/callback.component';
 
 const routes: Routes = [
   {
@@ -15,8 +15,8 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'login',
-    component: LoginComponent
+    path: 'callback',
+    component: CallbackComponent
   },
   {
     path: 'profile',
