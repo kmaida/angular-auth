@@ -20,16 +20,15 @@ export class AuthService {
     redirectUri: environment.auth.redirect,
     scope: 'openid profile email'
   });
-  // localStorage prop to track whether user is logged in locally
+  // localStorage property names
   private authFlag = 'isLoggedIn';
-  // localStorage prop to track redirect path after successful login
   private redirect = 'redirect';
   // Store token and create token stream
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
   // Create stream of user profile data
   userProfile$ = new BehaviorSubject<any>(null);
-  // Store authentication status and create authStatus stream
+  // Store authentication status and create stream
   authStatus = this.isAuthenticated ? 'init_with_auth_flag' : 'init_no_auth_flag';
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Auth-related URL paths
@@ -50,7 +49,7 @@ export class AuthService {
   constructor(private router: Router) { }
 
   login(autoLogin?: boolean) {
-    // Was this triggered by a secured page access attempt?
+    // Was this triggered by unauthorized access attempt?
     if (!autoLogin) {
       // If user clicked login button, store path
       // to redirect to after successful login
@@ -68,6 +67,7 @@ export class AuthService {
       // Subscribe to parseHash$ bound callback observable
       this.parseHash$({}).subscribe(
         authResult => {
+          this.setAuthStatus('parse_hash_begin');
           this.localLogin(authResult);
           this.navigateAfterHashParse();
         },
@@ -134,10 +134,8 @@ export class AuthService {
   }
 
   logout() {
-    // Remove authentication data from Angular app
     this.localLogout();
-    // Perform Auth0 authorization server logout next:
-    // Auth0 logout does a full page redirect, so
+    // Auth0 server logout does a full page redirect:
     // make sure you have full logout URL in your Auth0
     // Dashboard Application settings in Allowed Logout URLs
     this.Auth0.logout({
@@ -147,26 +145,17 @@ export class AuthService {
   }
 
   scheduleRenewal() {
-    // If app thinks it's not logged in or token isn't valid, do nothing
-    if (!this.isAuthenticated || !this.tokenValid) { return; }
+    if (!this.isAuthenticated) { return; }
     // Clean up any previous token renewal
     this.unscheduleRenewal();
-    // Scheduling of auto token renewal has begun
-    this.setAuthStatus('schedule_silent_auth_renewal');
+    this.setAuthStatus('silent_auth_renewal_setup');
     // Create and subscribe to expiration timer observable
     const expiresIn$ = of(this.tokenExp).pipe(
-      mergeMap(
-        expires => {
-          const now = Date.now();
-          // Use timer to track delay until expiration
-          // to run the refresh at the proper time
-          return timer(Math.max(1, expires - now));
-        }
-      )
+      mergeMap(exp => timer(Math.max(1, exp - Date.now())))
     );
     this.refreshSub = expiresIn$.subscribe(
       () => {
-        this.setAuthStatus('start_silent_auth_renewal');
+        this.setAuthStatus('silent_auth_renewal_begin');
         this.renewAuth();
         this.scheduleRenewal();
       }
@@ -175,27 +164,22 @@ export class AuthService {
 
   unscheduleRenewal() {
     if (this.refreshSub) {
-      this.setAuthStatus('remove_silent_auth_renewal');
+      this.setAuthStatus('silent_auth_renewal_removed');
       this.refreshSub.unsubscribe();
     }
   }
 
   private handleError(err) {
     this.hideAuthHeader = false;
-    // If there is an error code present, log out locally
     this.setAuthStatus('login_error');
-    this.localLogout(true);
     console.error(err);
+    // Log out locally and redirect to default auth failure route
+    this.localLogout(true);
   }
 
   get isAuthenticated(): boolean {
     // Check if the Angular app thinks this user is authenticated
     return JSON.parse(localStorage.getItem(this.authFlag));
-  }
-
-  get tokenValid(): boolean {
-    // Check if current datetime is before token expiration
-    return Date.now() < this.tokenExp;
   }
 
   setAuthStatus(status: string) {
@@ -210,17 +194,21 @@ export class AuthService {
 
   navigateAfterHashParse() {
     const rd = localStorage.getItem(this.redirect);
+    const status = 'parse_hash_redirect_complete';
     if (rd) {
       this.router.navigateByUrl(rd).then(
         navigated => {
           if (navigated) {
             this.hideAuthHeader = false;
+            this.setAuthStatus(status);
           }
           this.clearRedirect();
         }
       );
     } else {
+      this.clearRedirect();
       this.router.navigateByUrl(this.defaultSuccessPath);
+      this.setAuthStatus(status);
     }
   }
 

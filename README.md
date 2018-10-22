@@ -82,15 +82,16 @@ You can also see the current status of the authentication flow via the `authStat
 
 * `init_no_auth_flag` - application initialized, no knowledge of an authenticated user ("logged out" state)
 * `init_with_auth_flag` - application initialized, simple flag already exists in local storage indicating that this app believes a user was logged in previously and has not logged out (meaning they might have a valid session on the authorization server; authentication data not available in the front end yet)
-* `open_popup` - authentication popup has been opened (`login()` method was called)
-* `login_canceled` - authentication canceled before it could complete (e.g., the user closed the popup window without logging in)
 * `renew_auth` - app is requesting authentication information from the authorization server silently, either to restore a previous session or to silently renew an expired token
-* `schedule_silent_auth_renewal` - silent token renewal has been scheduled so if the user's token expires during a session, it will be silently renewed as long as their authorization server session is valid
+* `parse_hash_begin` - parsing hash data received from authorization server
+* `parse_hash_redirect_complete` - redirection completed after parsing hash
+* `silent_auth_renewal_setup` - silent token renewal has been scheduled so if the user's token expires during a session, it will be silently renewed as long as their authorization server session is valid
 * `login_success` - user has successfully been authenticated
 * `local_logout_begin` - initializing logout locally in the Angular application
 * `local_logout_complete` - authentication data has been cleared _locally_ in the Angular application (note: when _authorization server logout_ takes place, the app will perform a full-page redirect)
-* `start_silent_auth_renewal` - token is expiring; begin silently requesting a fresh token from the authorization server
-* `remove_silent_auth_renewal` - unsubscribe from automatic token renewal
+* `silent_auth_renewal_begin` - token is expiring; begin silently requesting a fresh token from the authorization server
+* `silent_auth_renewal_removed` - unsubscribe from automatic token renewal
+* `login_error` - an error occurred while authenticating, resulting in login failure
 
 ## What is Auth0?
 
