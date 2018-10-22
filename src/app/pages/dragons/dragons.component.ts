@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from 'src/app/api.service';
-import { AuthService } from 'src/app/auth/auth.service';
+import { ApiService } from './../../api.service';
+import { AuthService } from './../../auth/auth.service';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-secure',
-  templateUrl: './secure.component.html',
+  selector: 'app-dragons',
+  templateUrl: './dragons.component.html',
   styles: []
 })
-export class SecureComponent implements OnInit {
+export class DragonsComponent implements OnInit {
   dragons$ = this.api.getDragons$().pipe(
     tap(
       res => this.loading = false,

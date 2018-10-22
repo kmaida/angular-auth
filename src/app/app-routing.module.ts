@@ -3,12 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SecureInterceptor } from './auth/secure-interceptor.service';
-import { HomeComponent } from './pages/home/home.component';
-import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
-import { SecureComponent } from './pages/secure/secure.component';
+import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback.component';
-import { PublicComponent } from './pages/public/public.component';
+import { DinosaursComponent } from './pages/dinosaurs/dinosaurs.component';
+import { DragonsComponent } from './pages/dragons/dragons.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+
 
 const routes: Routes = [
   {
@@ -16,8 +17,8 @@ const routes: Routes = [
     component: CallbackComponent
   },
   {
-    path: 'public',
-    component: PublicComponent
+    path: 'dinosaurs',
+    component: DinosaursComponent
   },
   {
     path: 'profile',
@@ -27,8 +28,8 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'secure',
-    component: SecureComponent,
+    path: 'dragons',
+    component: DragonsComponent,
     canActivate: [
       AuthGuard
     ]

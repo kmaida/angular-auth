@@ -3,11 +3,11 @@ import { ApiService } from './../../api.service';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-public',
-  templateUrl: './public.component.html',
+  selector: 'app-dinosaurs',
+  templateUrl: './dinosaurs.component.html',
   styles: []
 })
-export class PublicComponent implements OnInit {
+export class DinosaursComponent implements OnInit {
   dinos$ = this.api.getDinos$().pipe(
     tap(
       res => this.loading = false,

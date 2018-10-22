@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { IDragon } from './dragon.model';
-import { IDino } from './dino.model';
+import { IDragon } from './models/dragon.model';
+import { IDino } from './models/dino.model';
 
 @Injectable({
   providedIn: 'root'
