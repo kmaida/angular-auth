@@ -5,13 +5,13 @@
         routerLink="/"
         class="nav-link"
         routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">Dinosaurs</a>
+        [routerLinkActiveOptions]="{ exact: true }">Home</a>
     </li>
     <li class="nav-item">
       <a
         routerLink="/public"
         class="nav-link"
-        routerLinkActive="active">Public</a>
+        routerLinkActive="active">Dinosaurs</a>
     </li>
     <li *ngIf="(auth.token$ | async)" class="nav-item">
       <a
