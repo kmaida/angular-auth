@@ -20,22 +20,22 @@ export class AuthService {
     redirectUri: environment.auth.redirect,
     scope: 'openid profile email'
   });
-  // LocalStorage prop to track whether app thinks it's logged in locally
+  // localStorage prop to track whether user is logged in locally
   private authFlag = 'isLoggedIn';
-  // LocalStorage prop to track redirect after login
+  // localStorage prop to track redirect path after successful login
   private redirect = 'redirect';
-  // Create stream of token
+  // Store token and create token stream
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
   // Create stream of user profile data
   userProfile$ = new BehaviorSubject<any>(null);
-  // Create stream of authentication status
+  // Store authentication status and create authStatus stream
   authStatus = this.isAuthenticated ? 'init_with_auth_flag' : 'init_no_auth_flag';
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
-  // Authentication navigation
+  // Auth-related URL paths
   logoutPath = '/';
   defaultSuccessPath = '/';
-  // Create observable of Auth0 parseHash method to gather auth results
+  // Create observable of Auth0 parseHash method; gather auth results
   parseHash$ = bindNodeCallback(this.Auth0.parseHash.bind(this.Auth0));
   // Create observable of Auth0 checkSession method to
   // verify authorization server session and renew tokens
@@ -43,16 +43,17 @@ export class AuthService {
   // Token expiration management
   tokenExp: number;
   refreshSub: Subscription;
-  // Hide auth header while loading
+  // Hide auth header while performing local login
+  // (e.g., on the callback page)
   hideAuthHeader: boolean;
 
   constructor(private router: Router) { }
 
   login(autoLogin?: boolean) {
-    // Was this triggered by access attempt?
+    // Was this triggered by a secured page access attempt?
     if (!autoLogin) {
-      // If user clicked login button, store URL to
-      // redirect to after successful login
+      // If user clicked login button, store path
+      // to redirect to after successful login
       this.storeAuthRedirect(this.router.url);
       // If login was triggered by an access attempt
       // instead, the route guard will set redirect
@@ -64,11 +65,28 @@ export class AuthService {
     if (window.location.hash && !this.isAuthenticated) {
       // Hide header while parsing hash
       this.hideAuthHeader = true;
+      // Subscribe to parseHash$ bound callback observable
       this.parseHash$({}).subscribe(
         authResult => {
           this.localLogin(authResult);
           this.navigateAfterHashParse();
         },
+        err => this.handleError(err)
+      );
+    } else {
+      // If visiting the callback page with no hash
+      // return to default logged out route
+      this.goToLogoutUrl();
+    }
+  }
+
+  renewAuth() {
+    if (this.isAuthenticated) {
+      // App (locally) believes the user is logged in
+      this.setAuthStatus('renew_auth');
+      // Check Auth0 authorization server session
+      this.checkSession$({}).subscribe(
+        authResult => this.localLogin(authResult),
         err => this.handleError(err)
       );
     }
@@ -91,6 +109,7 @@ export class AuthService {
     } else {
       // Something was missing from expected authResult
       this.localLogout(true);
+      this.setAuthStatus('login_error');
     }
   }
 
@@ -110,7 +129,7 @@ export class AuthService {
     this.setAuthStatus('local_logout_complete');
     // Redirect back to logout URL (if param set)
     if (redirect) {
-      this.router.navigate([this.logoutPath]);
+      this.goToLogoutUrl();
     }
   }
 
@@ -125,18 +144,6 @@ export class AuthService {
       returnTo: environment.auth.logoutUrl,
       clientID: environment.auth.clientId
     });
-  }
-
-  renewAuth() {
-    if (this.isAuthenticated) {
-      // App (locally) believes a user is logged in
-      this.setAuthStatus('renew_auth');
-      // Check Auth0 authorization server session
-      this.checkSession$({}).subscribe(
-        authResult => this.localLogin(authResult),
-        err => this.handleError(err)
-      );
-    }
   }
 
   scheduleRenewal() {
@@ -201,9 +208,6 @@ export class AuthService {
     this.token$.next(token);
   }
 
-  // When trying to access a protected route,
-  // user will be prompted to log in first.
-  // After login, they can be redirected
   navigateAfterHashParse() {
     const rd = localStorage.getItem(this.redirect);
     if (rd) {
@@ -226,6 +230,10 @@ export class AuthService {
 
   clearRedirect() {
     localStorage.removeItem(this.redirect);
+  }
+
+  goToLogoutUrl() {
+    this.router.navigate([this.logoutPath]);
   }
 
 }
