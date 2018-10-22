@@ -23,7 +23,7 @@ export class AuthService {
   // LocalStorage prop to track whether app thinks it's logged in locally
   private authFlag = 'isLoggedIn';
   // LocalStorage prop to track redirect after login
-  private rd = 'redirect';
+  private redirect = 'redirect';
   // Create stream of token
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
@@ -43,6 +43,8 @@ export class AuthService {
   // Token expiration management
   tokenExp: number;
   refreshSub: Subscription;
+  // Hide auth header while loading
+  hideAuthHeader: boolean;
 
   constructor(private router: Router) { }
 
@@ -60,6 +62,8 @@ export class AuthService {
 
   handleLoginCallback() {
     if (window.location.hash && !this.isAuthenticated) {
+      // Hide header while parsing hash
+      this.hideAuthHeader = true;
       this.parseHash$({}).subscribe(
         authResult => {
           this.localLogin(authResult);
@@ -201,9 +205,11 @@ export class AuthService {
   // user will be prompted to log in first.
   // After login, they can be redirected
   private navigateAfterHashParse() {
-    const redirect = localStorage.getItem(this.rd);
-    if (redirect) {
-      this.router.navigateByUrl(redirect);
+    const rd = localStorage.getItem(this.redirect);
+    if (rd) {
+      this.router.navigateByUrl(rd);
+      // Show header again once navigation is complete
+      this.hideAuthHeader = false;
       this.clearRedirect();
     } else {
       this.router.navigate([this.defaultSuccessPath]);
@@ -211,11 +217,11 @@ export class AuthService {
   }
 
   storeAuthRedirect(url: string) {
-    localStorage.setItem(this.rd, url);
+    localStorage.setItem(this.redirect, url);
   }
 
   clearRedirect() {
-    localStorage.removeItem(this.rd);
+    localStorage.removeItem(this.redirect);
   }
 
 }

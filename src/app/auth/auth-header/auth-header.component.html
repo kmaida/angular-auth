@@ -1,4 +1,4 @@
-<nav class="nav justify-content-between mt-2 mx-2 mb-3">
+<nav *ngIf="!auth.hideAuthHeader" class="nav justify-content-between mt-2 mx-2 mb-3">
   <ul class="nav">
     <li class="nav-item">
       <a
@@ -6,6 +6,12 @@
         class="nav-link"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">Dinosaurs</a>
+    </li>
+    <li class="nav-item">
+      <a
+        routerLink="/public"
+        class="nav-link"
+        routerLinkActive="active">Public</a>
     </li>
     <li *ngIf="(auth.token$ | async)" class="nav-item">
       <a
