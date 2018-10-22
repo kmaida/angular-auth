@@ -12,12 +12,12 @@ import { PublicComponent } from './pages/public/public.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomeComponent
-  },
-  {
     path: 'callback',
     component: CallbackComponent
+  },
+  {
+    path: 'public',
+    component: PublicComponent
   },
   {
     path: 'profile',
@@ -34,8 +34,9 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'public',
-    component: PublicComponent
+    path: '',
+    component: HomeComponent,
+    pathMatch: 'full'
   }
 ];
 

@@ -23,7 +23,7 @@ export class AuthService {
   // LocalStorage prop to track whether app thinks it's logged in locally
   private authFlag = 'isLoggedIn';
   // LocalStorage prop to track redirect after login
-  redirect = 'redirect';
+  private redirect = 'redirect';
   // Create stream of token
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
@@ -67,13 +67,10 @@ export class AuthService {
       this.parseHash$({}).subscribe(
         authResult => {
           this.localLogin(authResult);
-          window.location.hash = '';
           this.navigateAfterHashParse();
         },
         err => this.handleError(err)
       );
-    } else {
-      console.log('something');
     }
   }
 
@@ -219,7 +216,7 @@ export class AuthService {
         }
       );
     } else {
-      this.router.navigate([this.defaultSuccessPath]);
+      this.router.navigateByUrl(this.defaultSuccessPath);
     }
   }
 
