@@ -23,7 +23,7 @@ export class AuthService {
   // LocalStorage prop to track whether app thinks it's logged in locally
   private authFlag = 'isLoggedIn';
   // LocalStorage prop to track redirect after login
-  private redirect = 'redirect';
+  redirect = 'redirect';
   // Create stream of token
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
@@ -72,6 +72,8 @@ export class AuthService {
         },
         err => this.handleError(err)
       );
+    } else {
+      console.log('something');
     }
   }
 
@@ -175,6 +177,7 @@ export class AuthService {
   }
 
   private handleError(err) {
+    this.hideAuthHeader = false;
     // If there is an error code present, log out locally
     this.setAuthStatus('login_error');
     this.localLogout(true);
@@ -204,13 +207,17 @@ export class AuthService {
   // When trying to access a protected route,
   // user will be prompted to log in first.
   // After login, they can be redirected
-  private navigateAfterHashParse() {
+  navigateAfterHashParse() {
     const rd = localStorage.getItem(this.redirect);
     if (rd) {
-      this.router.navigateByUrl(rd);
-      // Show header again once navigation is complete
-      this.hideAuthHeader = false;
-      this.clearRedirect();
+      this.router.navigateByUrl(rd).then(
+        navigated => {
+          if (navigated) {
+            this.hideAuthHeader = false;
+          }
+          this.clearRedirect();
+        }
+      );
     } else {
       this.router.navigate([this.defaultSuccessPath]);
     }
