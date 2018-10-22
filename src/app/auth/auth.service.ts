@@ -24,7 +24,6 @@ export class AuthService {
   private authFlag = 'isLoggedIn';
   // LocalStorage prop to track redirect after login
   private rd = 'redirect';
-  authRedirect: string;
   // Create stream of token
   token: string = null;
   token$ = new BehaviorSubject<string>(this.token);
@@ -34,8 +33,8 @@ export class AuthService {
   authStatus = this.isAuthenticated ? 'init_with_auth_flag' : 'init_no_auth_flag';
   authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Authentication navigation
-  logoutUrl = '/';
-  authSuccessUrl = '/';
+  logoutPath = '/';
+  defaultSuccessPath = '/';
   // Create observable of Auth0 parseHash method to gather auth results
   parseHash$ = bindNodeCallback(this.Auth0.parseHash.bind(this.Auth0));
   // Create observable of Auth0 checkSession method to
@@ -47,7 +46,15 @@ export class AuthService {
 
   constructor(private router: Router) { }
 
-  login() {
+  login(autoLogin?: boolean) {
+    // Was this triggered by access attempt?
+    if (!autoLogin) {
+      // If user clicked login button, store URL to
+      // redirect to after successful login
+      this.storeAuthRedirect(this.router.url);
+      // If login was triggered by an access attempt
+      // instead, the route guard will set redirect
+    }
     this.Auth0.authorize();
   }
 
@@ -55,22 +62,10 @@ export class AuthService {
     if (window.location.hash && !this.isAuthenticated) {
       this.parseHash$({}).subscribe(
         authResult => {
-          window.location.hash = '';
           this.localLogin(authResult);
+          window.location.hash = '';
           this.navigateAfterHashParse();
         },
-        err => this.handleError(err)
-      );
-    }
-  }
-
-  renewAuth() {
-    if (this.isAuthenticated) {
-      // App (locally) believes a user is logged in
-      this.setAuthStatus('renew_auth');
-      // Check Auth0 authorization server session
-      this.checkSession$({}).subscribe(
-        authResult => this.localLogin(authResult),
         err => this.handleError(err)
       );
     }
@@ -98,8 +93,6 @@ export class AuthService {
 
   private localLogout(redirect?: boolean) {
     this.setAuthStatus('local_logout_begin');
-    // Set auth status flag to false
-    localStorage.setItem(this.authFlag, JSON.stringify(false));
     // User data is no longer available
     this.userProfile$.next(null);
     // Token is no longer available
@@ -108,12 +101,13 @@ export class AuthService {
     this.unscheduleRenewal();
     // Clear login redirect, if there was one
     this.clearRedirect();
+    // Set auth status flag to false
+    localStorage.setItem(this.authFlag, JSON.stringify(false));
     // Local app logout is complete
     this.setAuthStatus('local_logout_complete');
     // Redirect back to logout URL (if param set)
     if (redirect) {
-      console.log('redirecting');
-      this.router.navigate([this.logoutUrl]);
+      this.router.navigate([this.logoutPath]);
     }
   }
 
@@ -128,6 +122,18 @@ export class AuthService {
       returnTo: environment.auth.logoutUrl,
       clientID: environment.auth.clientId
     });
+  }
+
+  renewAuth() {
+    if (this.isAuthenticated) {
+      // App (locally) believes a user is logged in
+      this.setAuthStatus('renew_auth');
+      // Check Auth0 authorization server session
+      this.checkSession$({}).subscribe(
+        authResult => this.localLogin(authResult),
+        err => this.handleError(err)
+      );
+    }
   }
 
   scheduleRenewal() {
@@ -191,11 +197,6 @@ export class AuthService {
     this.token$.next(token);
   }
 
-  setRedirect(path: string) {
-    this.authRedirect = !!path ? path : '/';
-    localStorage.setItem(this.rd, this.authRedirect);
-  }
-
   // When trying to access a protected route,
   // user will be prompted to log in first.
   // After login, they can be redirected
@@ -205,8 +206,12 @@ export class AuthService {
       this.router.navigateByUrl(redirect);
       this.clearRedirect();
     } else {
-      this.router.navigate([this.authSuccessUrl]);
+      this.router.navigate([this.defaultSuccessPath]);
     }
+  }
+
+  storeAuthRedirect(url: string) {
+    localStorage.setItem(this.rd, url);
   }
 
   clearRedirect() {

@@ -7,7 +7,6 @@ import {
 } from '@angular/router';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
-import { map, first } from 'rxjs/operators';
 
 // https://stackoverflow.com/questions/38425461/angular2-canactivate-calling-async-function
 
@@ -17,10 +16,7 @@ import { map, first } from 'rxjs/operators';
 export class AuthGuard implements CanActivate {
   hasToken: boolean;
 
-  constructor(
-    private auth: AuthService,
-    private router: Router
-  ) { }
+  constructor(private auth: AuthService) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -37,8 +33,8 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     // Save secure path to redirect to after successful login and prompt to log in
-    this.auth.setRedirect(state.url);
-    this.auth.login();
+    this.auth.storeAuthRedirect(state.url);
+    this.auth.login(true);
     return false;
   }
 

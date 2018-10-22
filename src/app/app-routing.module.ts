@@ -8,6 +8,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
 import { SecureComponent } from './pages/secure/secure.component';
 import { CallbackComponent } from './pages/callback.component';
+import { PublicComponent } from './pages/public/public.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
     canActivate: [
       AuthGuard
     ]
+  },
+  {
+    path: 'public',
+    component: PublicComponent
   }
 ];
 
