@@ -157,7 +157,6 @@ export class AuthService {
       () => {
         this.setAuthStatus('silent_auth_renewal_begin');
         this.renewAuth();
-        this.scheduleRenewal();
       }
     );
   }
