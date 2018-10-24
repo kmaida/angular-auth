@@ -1,5 +1,7 @@
 # Angular Authentication with Auth0
 
+Branch: `redirect-mode`
+
 ## Dependencies
 
 * [Node.js with npm](http://nodejs.org), Node >= 6.9.0, npm >= 3
