@@ -1,99 +1,13 @@
 # Angular Authentication with Auth0
 
-Branch: `redirect-mode`
+This project is intended to test out the various authentication strategies for Single Page Applications. It is intended to be used via [branches](https://github.com/kmaida/angular-authentication/branches). Please see them here:
 
-## Dependencies
+* [`redirect-mode`](https://github.com/kmaida/angular-authentication/tree/redirect-mode)
+* [`popup-mode-no-route-protection`](https://github.com/kmaida/angular-authentication/tree/popup-mode-no-route-protection)
+* [`popup-with-local-login`](https://github.com/kmaida/angular-authentication/tree/popup-with-local-login)
+* [`popup-redirect-mixed-mode`](https://github.com/kmaida/angular-authentication/tree/popup-redirect-mixed-mode)
 
-* [Node.js with npm](http://nodejs.org), Node >= 6.9.0, npm >= 3
-* [@angular/cli](https://github.com/angular/angular-cli), >= 6
-
-### Sign Up for Auth0
-
-1. To create your _free_ Auth0 account, visit [auth0.com](https://auth0.com) and click Sign Up.
-2. Use Google, GitHub, or Microsoft Account to log in.
-
-### Auth0 Setup
-
-1. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
-2. Name your new app and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (staging/prod) to the **Allowed Callback URLs**.*
-4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (staging/prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**.* Click the "Save Changes" button.
-5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social).† You can then enable them for your app in the **Application** options under the **Connections** tab.
-
-*_You could set up separate Auth0 Applications for development and staging / production if you prefer._
-
-†_If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
-
-## Installation
-
-Clone this repository locally:
-
-```bash
-$ git clone https://github.com/auth0-blog/angular-authentication.git
-```
-
-From the root directory, run the following command to install dependencies:
-
-```bash
-$ npm install
-```
-
-## Configuration
-
-1. Open `/api/config.js.sample` and remove `.sample` from the file name. Then replace `[YOUR_AUTH0_DOMAIN]` with your Auth0 domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
-2. Open `/src/app/environments/environment.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
-3. Open `/src/app/environments/environment.prod.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
-
-> **Note:** If you used different Auth0 Applications for development and staging / production, `[YOUR_CLIENT_ID]` will differ between environment files.
-
-## Serving the Project
-
-### Development
-
-From the root of this project, run:
-
-```bash
-$ npm run dev
-```
-
-This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via the [Angular CLI](https://cli.angular.io) using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the Angular CLI and changes to the API will be watched by nodemon.
-
-### Staging / Production
-
-To build _and_ serve a production-ready version of the application, from the root of this project, run:
-
-```bash
-$ npm run stage
-```
-
-This will perform a production build of your Angular application and serve the minified `dist` build and API, available in the browser at `http://localhost:3000`. Changes will _not_ be watched.
-
-If you have _already built_ the Angular app and just want to serve it, you can run:
-
-```bash
-$ node server
-```
-
-## Authentication Stream
-
-This project supplies a stream of authentication events (called `authStatus$` and available in the `auth.service.ts` file) that you can subscribe to in order to follow the authentication flow in your browser's console when developing the application.
-
-You can also see the current status of the authentication flow via the `authStatus` property supplied by `auth.service.ts`.
-
-### Auth Status Events
-
-* `init_no_auth_flag` - application initialized, no knowledge of an authenticated user ("logged out" state)
-* `init_with_auth_flag` - application initialized, simple flag already exists in local storage indicating that this app believes a user was logged in previously and has not logged out (meaning they might have a valid session on the authorization server; authentication data not available in the front end yet)
-* `renew_auth` - app is requesting authentication information from the authorization server silently, either to restore a previous session or to silently renew an expired token
-* `parse_hash_begin` - parsing hash data received from authorization server
-* `parse_hash_redirect_complete` - redirection completed after parsing hash
-* `silent_auth_renewal_setup` - silent token renewal has been scheduled so if the user's token expires during a session, it will be silently renewed as long as their authorization server session is valid
-* `login_success` - user has successfully been authenticated
-* `local_logout_begin` - initializing logout locally in the Angular application
-* `local_logout_complete` - authentication data has been cleared _locally_ in the Angular application (note: when _authorization server logout_ takes place, the app will perform a full-page redirect)
-* `silent_auth_renewal_begin` - token is expiring; begin silently requesting a fresh token from the authorization server
-* `silent_auth_renewal_removed` - unsubscribe from automatic token renewal
-* `login_error` - an error occurred while authenticating, resulting in login failure
+Each branch has its own README. Please follow the instructions in the README for the strategy you would like to try out.
 
 ## What is Auth0?
 
