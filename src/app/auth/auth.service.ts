@@ -69,7 +69,7 @@ export class AuthService {
         authResult => {
           this.setAuthStatus('parse_hash_begin');
           this.localLogin(authResult);
-          this.navigateAfterHashParse();
+          this.navigateAfterParseHash();
         },
         err => this.handleError(err)
       );
@@ -185,7 +185,7 @@ export class AuthService {
     this.token$.next(token);
   }
 
-  navigateAfterHashParse() {
+  navigateAfterParseHash() {
     const rd = localStorage.getItem(this.redirect);
     const redirectCompleteStatus = 'parse_hash_redirect_complete';
     if (rd) {
