@@ -115,17 +115,11 @@ export class AuthService {
 
   private localLogout(redirect?: boolean) {
     this.setAuthStatus('local_logout_begin');
-    // User data is no longer available
     this.userProfile$.next(null);
-    // Token is no longer available
     this.setToken(null);
-    // Unschedule silent token renewal
     this.unscheduleRenewal();
-    // Clear login redirect, if there was one
     this.clearRedirect();
-    // Set auth status flag to false
     localStorage.setItem(this.authFlag, JSON.stringify(false));
-    // Local app logout is complete
     this.setAuthStatus('local_logout_complete');
     // Redirect back to logout URL (if param set)
     if (redirect) {
@@ -193,13 +187,13 @@ export class AuthService {
 
   navigateAfterHashParse() {
     const rd = localStorage.getItem(this.redirect);
-    const status = 'parse_hash_redirect_complete';
+    const redirectCompleteStatus = 'parse_hash_redirect_complete';
     if (rd) {
       this.router.navigateByUrl(rd).then(
         navigated => {
           if (navigated) {
             this.hideAuthHeader = false;
-            this.setAuthStatus(status);
+            this.setAuthStatus(redirectCompleteStatus);
           }
           this.clearRedirect();
         }
@@ -207,7 +201,7 @@ export class AuthService {
     } else {
       this.clearRedirect();
       this.router.navigateByUrl(this.defaultSuccessPath);
-      this.setAuthStatus(status);
+      this.setAuthStatus(redirectCompleteStatus);
     }
   }
 
