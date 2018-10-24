@@ -8,11 +8,3 @@ This project is intended to test out the various authentication strategies for S
 * [`popup-redirect-mixed-mode`](https://github.com/kmaida/angular-authentication/tree/popup-redirect-mixed-mode)
 
 Each branch has its own README. Please follow the instructions in the README for the strategy you would like to try out.
-
-## Author
-
-Kim Maida
-
-## License
-
-This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
