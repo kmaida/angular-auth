@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,11 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  authError$ = this.auth.authStatus$.pipe(
-    map(event => !!(event === 'login_error'))
+  authError$: Observable<boolean> = this.auth.authStatus$.pipe(
+    filter(event => event === 'login_error' || event === 'login_success'),
+    map(
+      event => !!(event === 'login_error')
+    )
   );
 
   constructor(public auth: AuthService) {}
