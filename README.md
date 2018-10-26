@@ -16,13 +16,11 @@ Branch: `redirect-mode`
 
 1. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
 2. Name your new app and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (staging/prod) to the **Allowed Callback URLs**.*
-4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (staging/prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**.* Click the "Save Changes" button.
-5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social).† You can then enable them for your app in the **Application** options under the **Connections** tab.
+3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (staging/prod) to the **Allowed Callback URLs**.
+4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (staging/prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
+5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
 
-*_You could set up separate Auth0 Applications for development and staging / production if you prefer._
-
-†_If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
+*_If using social connections, set up your own social keys! _Do not_ leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
 ## Installation
 
@@ -43,8 +41,6 @@ $ npm install
 1. Open `/api/config.js.sample` and remove `.sample` from the file name. Then replace `[YOUR_AUTH0_DOMAIN]` with your Auth0 domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
 2. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
 3. Open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
-
-> **Note:** If you used different Auth0 Applications for development and staging / production, `[YOUR_CLIENT_ID]` will differ between environment files.
 
 ## Serving the Project
 
@@ -79,21 +75,6 @@ $ node server
 This project supplies a stream of authentication events (called `authStatus$` and available in the `auth.service.ts` file) that you can subscribe to in order to follow the authentication flow in your browser's console when developing the application.
 
 You can also see the current status of the authentication flow via the `authStatus` property supplied by `auth.service.ts`.
-
-### Auth Status Events
-
-* `init_no_auth_flag` - application initialized, no knowledge of an authenticated user ("logged out" state)
-* `init_with_auth_flag` - application initialized, simple flag already exists in local storage indicating that this app believes a user was logged in previously and has not logged out (meaning they might have a valid session on the authorization server; authentication data not available in the front end yet)
-* `renew_auth` - app is requesting authentication information from the authorization server silently, either to restore a previous session or to silently renew an expired token
-* `parse_hash_begin` - parsing hash data received from authorization server
-* `parse_hash_redirect_complete` - redirection completed after parsing hash
-* `silent_auth_renewal_setup` - silent token renewal has been scheduled so if the user's token expires during a session, it will be silently renewed as long as their authorization server session is valid
-* `login_success` - user has successfully been authenticated
-* `local_logout_begin` - initializing logout locally in the Angular application
-* `local_logout_complete` - authentication data has been cleared _locally_ in the Angular application (note: when _authorization server logout_ takes place, the app will perform a full-page redirect)
-* `silent_auth_renewal_begin` - token is expiring; begin silently requesting a fresh token from the authorization server
-* `silent_auth_renewal_removed` - unsubscribe from automatic token renewal
-* `login_error` - an error occurred while authenticating, resulting in login failure
 
 ## What is Auth0?
 
