@@ -7,8 +7,6 @@ import {
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 
-// https://stackoverflow.com/questions/38425461/angular2-canactivate-calling-async-function
-
 @Injectable({
   providedIn: 'root'
 })
