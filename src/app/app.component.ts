@@ -9,12 +9,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  authError$: Observable<boolean> = this.auth.authStatus$.pipe(
-    filter(event => event === 'login_error' || event === 'login_success'),
-    map(
-      event => !!(event === 'login_error')
-    )
-  );
 
   constructor(public auth: AuthService) {}
 
