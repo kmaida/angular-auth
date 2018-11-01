@@ -13,7 +13,7 @@
         class="nav-link"
         routerLinkActive="active">Dinosaurs</a>
     </li>
-    <li *ngIf="(auth.token$ | async)" class="nav-item">
+    <li *ngIf="auth.isAuthenticated" class="nav-item">
       <a
         routerLink="/dragons"
         class="nav-link"
@@ -26,7 +26,7 @@
       *ngIf="!auth.isAuthenticated"
       class="btn btn-success btn-sm"
       (click)="auth.login()">Log In</button>
-    <span *ngIf="auth.isAuthenticated && (auth.userProfile$ | async) as user">
+    <span *ngIf="(auth.userProfile$ | async) as user">
       <img [src]="user.picture">
       <a class="px-1" routerLink="/profile" href><small>{{ user.name }}</small></a>
       <button
