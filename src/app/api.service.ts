@@ -9,13 +9,13 @@ import { IDino } from './models/dino.model';
   providedIn: 'root'
 })
 export class ApiService {
-  private _ApiRoot = '/api/';
+  private apiRoot = '/api/';
 
   constructor(private http: HttpClient) { }
 
   getDinos$(): Observable<any[]> {
     return this.http
-      .get<IDino[]>(`${this._ApiRoot}public`)
+      .get<IDino[]>(`${this.apiRoot}public`)
       .pipe(
         catchError(err => throwError(err))
       );
@@ -23,7 +23,7 @@ export class ApiService {
 
   getDragons$(): Observable<any[]> {
     return this.http
-      .get<IDragon[]>(`${this._ApiRoot}secure`)
+      .get<IDragon[]>(`${this.apiRoot}secure`)
       .pipe(
         catchError(err => throwError(err))
       );
