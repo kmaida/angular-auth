@@ -21,16 +21,15 @@ export class SecureInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     if (req.url.indexOf('secure') > -1) {
-      return this.auth.token$
-        .pipe(
-          filter(token => typeof token === 'string'),
-          mergeMap(token => {
-            const tokenReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${token}` }
-            });
-            return next.handle(tokenReq);
-          })
-        );
+      return this.auth.token$.pipe(
+        filter(token => typeof token === 'string'),
+        mergeMap(token => {
+          const tokenReq = req.clone({
+            setHeaders: { Authorization: `Bearer ${token}` }
+          });
+          return next.handle(tokenReq);
+        })
+      );
     }
     return next.handle(req);
   }
