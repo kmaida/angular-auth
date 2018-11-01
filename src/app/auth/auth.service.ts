@@ -28,9 +28,6 @@ export class AuthService {
   token$ = new BehaviorSubject<string>(this.token);
   // Create stream of user profile data
   userProfile$ = new BehaviorSubject<any>(null);
-  // Store authentication status and create stream
-  authStatus = this.isAuthenticated ? 'init_with_auth_flag' : 'init_no_auth_flag';
-  authStatus$ = new BehaviorSubject<string>(this.authStatus);
   // Auth-related URL paths
   logoutPath = '/';
   defaultSuccessPath = '/';
@@ -67,7 +64,6 @@ export class AuthService {
       // Subscribe to parseHash$ bound callback observable
       this.parseHash$({}).subscribe(
         authResult => {
-          this.setAuthStatus('parse_hash_begin');
           this.localLogin(authResult);
           this.navigateAfterParseHash();
         },
@@ -82,8 +78,6 @@ export class AuthService {
 
   renewAuth() {
     if (this.isAuthenticated) {
-      // App (locally) believes the user is logged in
-      this.setAuthStatus('renew_auth');
       // Check Auth0 authorization server session
       this.checkSession$({}).subscribe(
         authResult => this.localLogin(authResult),
@@ -104,23 +98,18 @@ export class AuthService {
       localStorage.setItem(this.authFlag, JSON.stringify(true));
       // Set up silent token renewal for this browser session
       this.scheduleRenewal();
-      // Login has succeeded!
-      this.setAuthStatus('login_success');
     } else {
       // Something was missing from expected authResult
       this.localLogout(true);
-      this.setAuthStatus('login_error');
     }
   }
 
   private localLogout(redirect?: boolean) {
-    this.setAuthStatus('local_logout_begin');
     this.userProfile$.next(null);
     this.setToken(null);
     this.unscheduleRenewal();
     this.clearRedirect();
     localStorage.setItem(this.authFlag, JSON.stringify(false));
-    this.setAuthStatus('local_logout_complete');
     // Redirect back to logout URL (if param set)
     if (redirect) {
       this.goToLogoutUrl();
@@ -142,29 +131,23 @@ export class AuthService {
     if (!this.isAuthenticated) { return; }
     // Clean up any previous token renewal
     this.unscheduleRenewal();
-    this.setAuthStatus('silent_auth_renewal_setup');
     // Create and subscribe to expiration timer observable
     const expiresIn$ = of(this.tokenExp).pipe(
       mergeMap(exp => timer(Math.max(1, exp - Date.now())))
     );
     this.refreshSub = expiresIn$.subscribe(
-      () => {
-        this.setAuthStatus('silent_auth_renewal_begin');
-        this.renewAuth();
-      }
+      () => this.renewAuth()
     );
   }
 
   unscheduleRenewal() {
     if (this.refreshSub) {
-      this.setAuthStatus('silent_auth_renewal_removed');
       this.refreshSub.unsubscribe();
     }
   }
 
   private handleError(err) {
     this.hideAuthHeader = false;
-    this.setAuthStatus('login_error');
     console.error(err);
     // Log out locally and redirect to default auth failure route
     this.localLogout(true);
@@ -175,11 +158,6 @@ export class AuthService {
     return JSON.parse(localStorage.getItem(this.authFlag));
   }
 
-  setAuthStatus(status: string) {
-    this.authStatus = status;
-    this.authStatus$.next(this.authStatus);
-  }
-
   setToken(token: string) {
     this.token = token;
     this.token$.next(token);
@@ -187,13 +165,11 @@ export class AuthService {
 
   navigateAfterParseHash() {
     const rd = localStorage.getItem(this.redirect);
-    const redirectCompleteStatus = 'parse_hash_redirect_complete';
     if (rd) {
       this.router.navigateByUrl(rd).then(
         navigated => {
           if (navigated) {
             this.hideAuthHeader = false;
-            this.setAuthStatus(redirectCompleteStatus);
           }
           this.clearRedirect();
         }
@@ -201,7 +177,6 @@ export class AuthService {
     } else {
       this.clearRedirect();
       this.router.navigateByUrl(this.defaultSuccessPath);
-      this.setAuthStatus(redirectCompleteStatus);
     }
   }
 

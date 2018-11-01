@@ -15,16 +15,10 @@ import { Subscription } from 'rxjs';
   `]
 })
 export class AuthHeaderComponent implements OnInit {
-  authStatusSub: Subscription;
 
   constructor(public auth: AuthService) { }
 
   ngOnInit() {
-    // Simply log authentication status
-    this.authStatusSub = this.auth.authStatus$.subscribe(
-      status => console.log(status),
-      err => console.log(err)
-    );
   }
 
 }

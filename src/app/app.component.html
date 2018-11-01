@@ -1,6 +1,5 @@
 <app-auth-header></app-auth-header>
 
 <div class="container">
-  <app-error *ngIf="(authError$ | async)" [authError]="true"></app-error>
   <router-outlet></router-outlet>
 </div>
