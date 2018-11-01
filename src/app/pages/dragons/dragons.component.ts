@@ -18,7 +18,7 @@ export class DragonsComponent implements OnInit {
       }
     )
   );
-  loading: boolean;
+  loading = true;
   error: boolean;
 
   constructor(
@@ -27,7 +27,6 @@ export class DragonsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loading = true;
   }
 
 }
