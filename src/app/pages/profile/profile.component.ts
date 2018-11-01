@@ -10,9 +10,7 @@ import { tap, catchError } from 'rxjs/operators';
 })
 export class ProfileComponent implements OnInit {
   user$ = this.auth.userProfile$.pipe(
-    catchError(
-      err => throwError(err)
-    ),
+    catchError(err => throwError(err)),
     tap(
       user => this.loading = false,
       err => {
