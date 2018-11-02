@@ -6,8 +6,8 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { Observable } from 'rxjs';
-import { filter, mergeMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { filter, mergeMap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,8 @@ export class SecureInterceptor implements HttpInterceptor {
             setHeaders: { Authorization: `Bearer ${token}` }
           });
           return next.handle(tokenReq);
-        })
+        }),
+        catchError(err => throwError(err))
       );
     }
     return next.handle(req);
