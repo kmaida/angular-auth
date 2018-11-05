@@ -18,7 +18,6 @@ const config = require('./api/config');
  */
 
 const app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -26,7 +25,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const port = '3000';
 app.set('port', port);
 
-// Set static path to Angular app in dist for staging / prod
+// Set static path to Angular app
+// (Don't run in dev)
 if (process.env.NODE_ENV !== 'dev') {
   app.use('/', express.static(path.join(__dirname, './dist/angular-auth')));
 }
