@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IDragon } from './../../../models/dragon.model';
+import { IDragon } from '../../../data/models/dragon.interface';
 
 @Component({
   selector: 'app-dragon',

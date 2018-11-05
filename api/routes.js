@@ -47,14 +47,14 @@ module.exports = function(app, config) {
   });
 
   // GET public data (dinosaurs)
-  app.get('/api/public', (req, res) => {
+  app.get('/api/dinosaurs', (req, res) => {
     setTimeout(() => {
       res.json(dinosData);
     }, delay());
   });
 
   // GET secure data (dragons)
-  app.get('/api/secure', authCheck, (req, res) => {
+  app.get('/api/secure/dragons', authCheck, (req, res) => {
     setTimeout(() => {
       res.json(dragonsData);
     }, delay());

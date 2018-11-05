@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from './../../api.service';
+import { ApiService } from '../../data/api.service';
 import { AuthService } from './../../auth/auth.service';
 import { tap } from 'rxjs/operators';
 

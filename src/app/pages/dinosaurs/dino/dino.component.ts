@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IDino } from './../../../models/dino.model';
+import { IDino } from '../../../data/models/dino.interface';
 
 @Component({
   selector: 'app-dino',
