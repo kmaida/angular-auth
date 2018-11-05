@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
-    "dev": "concurrently \"ng serve --proxy-config proxy.config.json\" \"NODE_ENV=dev nodemon server\"",
-    "start": "ng serve",
-    "build": "ng build",
-    "stage": "ng build --prod && node server",
+    "start": "concurrently \"ng serve --proxy-config proxy.config.json\" \"NODE_ENV=dev nodemon server\"",
+    "build": "ng build --prod && node server",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
