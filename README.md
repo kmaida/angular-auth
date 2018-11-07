@@ -36,9 +36,9 @@ $ npm install
 
 ## Configuration
 
-1. Open `/api/config.js.sample` and remove `.sample` from the file name. Then replace `[YOUR_AUTH0_DOMAIN]` with your Auth0 domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
-2. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
-3. Open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `[YOUR_CLIENT_ID]` and `[YOUR_AUTH0_DOMAIN]` with your Auth0 application's client ID and domain.
+1. Open `/api/config.js.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
+2. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
+3. Open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
 
 ## Serving the Project
 

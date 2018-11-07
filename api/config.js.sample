@@ -1,5 +1,5 @@
 // Auth0 configuration
 module.exports = {
-  AUDIENCE: '[YOUR_AUTH0_CLIENT_ID]', // Auth0 client ID
-  AUTH0_DOMAIN: '[YOUR_AUTH0_DOMAIN]' // e.g., 'you.auth0.com'
+  CLIENT_ID: '{YOUR_AUTH0_CLIENT_ID}',
+  AUTH0_DOMAIN: '{YOUR_AUTH0_DOMAIN}' // e.g., 'you.auth0.com'
 };
