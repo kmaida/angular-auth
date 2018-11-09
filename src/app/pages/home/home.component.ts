@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ApiService } from '../../data/api.service';
 import { tap } from 'rxjs/operators';
 
@@ -19,10 +20,15 @@ export class HomeComponent implements OnInit {
   );
   loading = true;
   error: boolean;
+  pageTitle = 'Welcome';
 
-  constructor(private api: ApiService) { }
+  constructor(
+    private title: Title,
+    private api: ApiService
+  ) { }
 
   ngOnInit() {
+    this.title.setTitle(this.pageTitle);
   }
 
 }

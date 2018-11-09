@@ -4,7 +4,7 @@
 </ng-template>
 
 <div *ngIf="(dinos$ | async) as dinos else noDinos">
-  <h1 class="text-center py-2">🦕 🦖</h1>
+  <h1 class="text-center py-2">🦕 {{ pageTitle }} 🦖</h1>
   <p *ngIf="!auth.isAuthenticated" class="text-center">
     Log in to learn more about dinosaurs!
   </p>

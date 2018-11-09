@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from './../../auth/auth.service';
 import { throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
@@ -22,9 +23,13 @@ export class ProfileComponent implements OnInit {
   loading = true;
   error: boolean;
 
-  constructor(private auth: AuthService) { }
+  constructor(
+    private title: Title,
+    private auth: AuthService
+  ) { }
 
   ngOnInit() {
+    this.title.setTitle('Profile');
   }
 
   makeArray(obj): string[] {

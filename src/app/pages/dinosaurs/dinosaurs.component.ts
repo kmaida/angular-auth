@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from './../../auth/auth.service';
 import { ApiService } from './../../data/api.service';
 import { tap } from 'rxjs/operators';
@@ -20,13 +21,16 @@ export class DinosaursComponent implements OnInit {
   );
   loading = true;
   error: boolean;
+  pageTitle = 'Dinosaurs';
 
   constructor(
+    private title: Title,
     public auth: AuthService,
     private api: ApiService
   ) { }
 
   ngOnInit() {
+    this.title.setTitle(this.pageTitle);
   }
 
 }
