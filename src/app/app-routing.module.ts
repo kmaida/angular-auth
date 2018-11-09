@@ -20,15 +20,15 @@ const routes: Routes = [
     component: DinosaursComponent
   },
   {
-    path: 'profile',
-    component: ProfileComponent,
+    path: 'dinosaur/:name',
+    component: DinosaurDetailsComponent,
     canActivate: [
       AuthGuard
     ]
   },
   {
-    path: 'dinosaur/:name',
-    component: DinosaurDetailsComponent,
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [
       AuthGuard
     ]
