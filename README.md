@@ -14,9 +14,11 @@
 
 1. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
 2. Name your new app and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (prod) to the **Allowed Callback URLs**.
-4. Add `http://localhost:4200` (dev) and `http://localhost:3000` (prod) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
-5. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
+3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (stage) to the **Allowed Callback URLs**.
+4. If/when you have a production URL, add it (with the `/callback` segment) to **Allowed Callback URLs** as well.
+5. Add `http://localhost:4200` (dev) and `http://localhost:3000` (stage) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
+6. If/when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well.
+7. If you'd like, you can [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
 
 *_If using social connections, set up your own social keys! Do not leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
@@ -38,7 +40,8 @@ $ npm install
 
 1. Open `/api/config.js.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
 2. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
-3. Open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
+3. Open `/src/environments/environment.stage.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
+4. If/when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL (e.g., `https://my-angular-app.com`).
 
 ## Serving the Project
 
@@ -84,11 +87,6 @@ Auth0 helps you to:
 * Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
 * Analytics of how, when and where users are logging in.
 * Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
-
-## Create a Free Auth0 Account
-
-1. Go to [Auth0](https://auth0.com) and click Sign Up.
-2. Use Google, GitHub, or Microsoft Account to log in.
 
 ## Issue Reporting
 

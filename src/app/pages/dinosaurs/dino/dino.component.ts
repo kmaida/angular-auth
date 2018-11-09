@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IDino } from '../../../data/models/dino.interface';
+import { IDino } from './../../../data/models/dino.interface';
+import { AuthService } from './../../../auth/auth.service';
 
 @Component({
   selector: 'app-dino',
@@ -9,7 +10,7 @@ import { IDino } from '../../../data/models/dino.interface';
 export class DinoComponent implements OnInit {
   @Input() dino: IDino;
 
-  constructor() { }
+  constructor(public auth: AuthService) { }
 
   ngOnInit() {
   }

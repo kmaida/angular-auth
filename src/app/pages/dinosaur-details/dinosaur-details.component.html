@@ -1,0 +1,22 @@
+<ng-template #noDino>
+  <app-loading *ngIf="loading"></app-loading>
+  <app-error *ngIf="error"></app-error>
+</ng-template>
+
+<ng-container *ngIf="(params$ | async) && (dino$ | async) as dino else noDino">
+  <h1 class="text-center py-2">{{ dino.name }}</h1>
+  <div class="card my-2">
+    <div class="card-body">
+      <div class="card-text">
+        <ul class="list-unstyled">
+          <li><strong>Pronunciation:</strong> {{ dino.pronunciation }}</li>
+          <li><strong>Meaning of Name:</strong> "{{ dino.meaningOfName }}"</li>
+          <li><strong>Lived:</strong> {{ dino.period }} ({{ dino.mya }} million years ago)</li>
+          <li><strong>Diet:</strong> {{ dino.diet }}</li>
+          <li><strong>Length:</strong> {{ dino.length }}</li>
+        </ul>
+      </div>
+      <p class="card-text lead" [innerHTML]="dino.info"></p>
+    </div>
+  </div>
+</ng-container>

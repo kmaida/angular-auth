@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../data/api.service';
+import { AuthService } from './../../auth/auth.service';
+import { ApiService } from './../../data/api.service';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -20,7 +21,10 @@ export class DinosaursComponent implements OnInit {
   loading = true;
   error: boolean;
 
-  constructor(private api: ApiService) { }
+  constructor(
+    public auth: AuthService,
+    private api: ApiService
+  ) { }
 
   ngOnInit() {
   }

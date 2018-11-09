@@ -7,9 +7,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback.component';
 import { DinosaursComponent } from './pages/dinosaurs/dinosaurs.component';
-import { DragonsComponent } from './pages/dragons/dragons.component';
+import { DinosaurDetailsComponent } from './pages/dinosaur-details/dinosaur-details.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-
 
 const routes: Routes = [
   {
@@ -28,8 +27,8 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'dragons',
-    component: DragonsComponent,
+    path: 'dinosaur/:name',
+    component: DinosaurDetailsComponent,
     canActivate: [
       AuthGuard
     ]

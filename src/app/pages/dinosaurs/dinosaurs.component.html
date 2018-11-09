@@ -5,6 +5,9 @@
 
 <div *ngIf="(dinos$ | async) as dinos else noDinos">
   <h1 class="text-center py-2">🦕 🦖</h1>
+  <p *ngIf="!auth.isAuthenticated" class="text-center">
+    Log in to learn more about dinosaurs!
+  </p>
   <ng-container *ngFor="let dino of dinos">
     <app-dino [dino]="dino"></app-dino>
   </ng-container>

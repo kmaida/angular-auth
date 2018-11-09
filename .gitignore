@@ -3,6 +3,7 @@
 /api/config.js
 environment.ts
 environment.prod.ts
+environment.stage.ts
 
 # compiled output
 /dist

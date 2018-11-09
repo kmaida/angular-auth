@@ -4,13 +4,13 @@
       {{ dino.name }}
     </h5>
     <div class="card-text">
-      <ul class="list-unstyled">
-        <li><em>{{ dino.pronunciation }}</em> / "{{ dino.meaningOfName }}"</li>
-        <li><strong>Lived:</strong> {{ dino.period }} ({{ dino.mya }} million years ago)</li>
-        <li><strong>Diet:</strong> {{ dino.diet }}</li>
-        <li><strong>Length:</strong> {{ dino.length }}</li>
-      </ul>
+      <p class="mb-0">
+        <em>({{ dino.pronunciation }})</em>
+      </p>
+      <a
+        *ngIf="auth.isAuthenticated"
+        class="btn btn-primary btn-sm mt-2"
+        routerLink="/dinosaur/{{ dino.name | lowercase }}">Learn More</a>
     </div>
-    <p class="card-text lead" [innerHTML]="dino.info"></p>
   </div>
 </div>

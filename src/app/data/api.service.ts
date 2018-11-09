@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { IDragon } from './models/dragon.interface';
 import { IDino } from './models/dino.interface';
 
 @Injectable({
@@ -13,7 +12,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getDinos$(): Observable<any[]> {
+  getDinos$(): Observable<IDino[]> {
     return this.http
       .get<IDino[]>(`${this.apiRoot}dinosaurs`)
       .pipe(
@@ -21,9 +20,9 @@ export class ApiService {
       );
   }
 
-  getDragons$(): Observable<any[]> {
+  getDinoByName$(name: string): Observable<IDino> {
     return this.http
-      .get<IDragon[]>(`${this.apiRoot}secure/dragons`)
+      .get<IDino>(`${this.apiRoot}secure/dinosaur/${name}`)
       .pipe(
         catchError(err => throwError(err))
       );
