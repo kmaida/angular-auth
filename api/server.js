@@ -9,7 +9,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 // Config
-const config = require('./api/config');
+const config = require('./config');
 
 /*
  |--------------------------------------
@@ -28,7 +28,7 @@ app.set('port', port);
 // Set static path to Angular app
 // (Don't run in dev)
 if (app.get('env') !== 'dev') {
-  app.use('/', express.static(path.join(__dirname, '/dist/angular-auth')));
+  app.use('/', express.static(path.join(__dirname, '../dist/angular-auth')));
 }
 
 /*
@@ -37,13 +37,13 @@ if (app.get('env') !== 'dev') {
  |--------------------------------------
  */
 
-require('./api/routes')(app, config);
+require('./routes')(app, config);
 
 // Pass routing to Angular app
 // (Don't run in dev)
 if (app.get('env') !== 'dev') {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/dist/angular-auth/index.html'));
+    res.sendFile(path.join(__dirname, '../dist/angular-auth/index.html'));
   });
 }
 
