@@ -27,8 +27,8 @@ app.set('port', port);
 
 // Set static path to Angular app
 // (Don't run in dev)
-if (process.env.NODE_ENV !== 'dev') {
-  app.use('/', express.static(path.join(__dirname, './dist/angular-auth')));
+if (app.get('env') !== 'dev') {
+  app.use('/', express.static(path.join(__dirname, '/dist/angular-auth')));
 }
 
 /*
@@ -41,8 +41,8 @@ require('./api/routes')(app, config);
 
 // Pass routing to Angular app
 // (Don't run in dev)
-if (process.env.NODE_ENV !== 'dev') {
-  app.get('*', function(req, res) {
+if (app.get('env') !== 'dev') {
+  app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/dist/angular-auth/index.html'));
   });
 }
