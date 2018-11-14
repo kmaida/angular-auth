@@ -3,8 +3,8 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { IDino } from 'src/app/data/models/dino.interface';
-import { ApiService } from 'src/app/data/api.service';
+import { IDino } from './../../data/models/dino.interface';
+import { ApiService } from './../../data/api.service';
 
 @Component({
   selector: 'app-dinosaur-details',
