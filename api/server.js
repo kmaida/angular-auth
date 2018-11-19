@@ -68,14 +68,6 @@ app.use(resSec);
 
 require('./routes')(app, config);
 
-// Pass routing to Angular app
-// (Don't run in dev)
-if (app.get('env') !== 'dev') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/angular-auth/index.html'));
-  });
-}
-
 /*
  |--------------------------------------
  | Server

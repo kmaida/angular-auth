@@ -15,15 +15,13 @@ export class DinosaurDetailsComponent implements OnInit {
   name: string;
   params$ = this.route.params.pipe(
     tap(
-      params => {
-        this.name = params['name'];
-        this.dinoSetup();
-      }
+      params => this.dinoSetup(params['name'])
     )
   );
   dino$: Observable<IDino>;
   loading = true;
   error: boolean;
+  errorMsg: string;
 
   constructor(
     private title: Title,
@@ -34,20 +32,28 @@ export class DinosaurDetailsComponent implements OnInit {
   ngOnInit() {
   }
 
-  private dinoSetup() {
-    this.dino$ = this.api.getDinoByName$(this.name).pipe(
+  private dinoSetup(nameParam: string) {
+    this.dino$ = this.api.getDinoByName$(nameParam).pipe(
       tap(
         dino => {
-          this.title.setTitle(dino.name);
-          this.loading = false;
+          if (dino) {
+            this.title.setTitle(dino.name);
+            this.loading = false;
+          } else {
+            this.handleErr('The dinosaur you requested could not be found.');
+          }
         },
-        err => {
-          this.error = true;
-          this.loading = false;
-          this.title.setTitle('Dinosaur');
-        }
+        err => this.handleErr()
       )
     );
+  }
+
+  private handleErr(msg?: string) {
+    this.error = true;
+    this.loading = false;
+    if (msg) {
+      this.errorMsg = msg;
+    }
   }
 
 }

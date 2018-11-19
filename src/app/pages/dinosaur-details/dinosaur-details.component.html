@@ -1,6 +1,6 @@
 <ng-template #noDino>
   <app-loading *ngIf="loading"></app-loading>
-  <app-error *ngIf="error"></app-error>
+  <app-error *ngIf="error" [errorMsg]="errorMsg"></app-error>
 </ng-template>
 
 <ng-container *ngIf="(params$ | async) && (dino$ | async) as dino else noDino">

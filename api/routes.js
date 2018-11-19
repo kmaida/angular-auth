@@ -1,9 +1,3 @@
-/*
- |--------------------------------------
- | Dependencies
- |--------------------------------------
- */
-
 // Auth
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
@@ -15,10 +9,12 @@ const allDinos = dinosData.map(dino => {
     pronunciation: dino.pronunciation
   }
 });
+// Simulate live server call by adding random delay
+const delay = () => Math.random() * 2500;
 
 /*
  |--------------------------------------
- | Authentication Middleware
+ | Routing
  |--------------------------------------
  */
 
@@ -36,15 +32,12 @@ module.exports = function(app, config) {
     algorithm: 'RS256'
   });
 
-/*
- |--------------------------------------
- | API Routes
- |--------------------------------------
- */
-
-  // Simulate live server call by adding random delay
-  function delay() {
-    return Math.random() * 2500;
+  // Pass routing to Angular app
+  // (Don't run in dev)
+  if (app.get('env') !== 'dev') {
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../dist/angular-auth/index.html'));
+    });
   }
 
   // GET API root
