@@ -10,6 +10,8 @@ import { tap } from 'rxjs/operators';
   styles: []
 })
 export class DinosaursComponent implements OnInit {
+  loading = true;
+  error: boolean;
   dinos$ = this.api.getDinos$().pipe(
     tap(
       res => this.loading = false,
@@ -19,8 +21,6 @@ export class DinosaursComponent implements OnInit {
       }
     )
   );
-  loading = true;
-  error: boolean;
   pageTitle = 'Dinosaurs';
 
   constructor(

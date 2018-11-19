@@ -15,13 +15,14 @@ export class DinosaurDetailsComponent implements OnInit {
   name: string;
   params$ = this.route.params.pipe(
     tap(
-      params => this.dinoSetup(params['name'])
+      params => this.dinoSetup(params['name']),
+      err => this.handleErr()
     )
   );
-  dino$: Observable<IDino>;
   loading = true;
   error: boolean;
   errorMsg: string;
+  dino$: Observable<IDino>;
 
   constructor(
     private title: Title,
