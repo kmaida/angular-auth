@@ -50,20 +50,23 @@ $ npm install
 From the root of this project, run:
 
 ```bash
-$ npm run start
+$ npm run dev
 ```
 
 This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via the [Angular CLI](https://cli.angular.io) using a proxy. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the Angular CLI and changes to the API will be watched by nodemon.
 
-### Production
+### Staging / Production
 
 To build _and_ serve a production-ready version of the application, from the root of this project, run:
 
 ```bash
-$ npm run build
+# Staging environment
+$ npm run stage
+# Production environment
+$ npm run prod
 ```
 
-This will perform a production build of your Angular application and serve the minified `dist` build and API, available in the browser at `http://localhost:3000`. Changes will _not_ be watched.
+These commands will perform a build of your Angular application and serve the minified `dist` build and API, available in the browser at `http://localhost:3000`. Changes will _not_ be watched.
 
 If you have _already built_ the Angular app and just want to serve it, you can run:
 

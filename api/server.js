@@ -44,6 +44,7 @@ function resSec(req, res, next) {
     // Enforces HTTPS across the entire app
     // While nginx can do a redirect, HSTS redirects
     // before anything is sent to the server
+    // (Only check this in a production environment)
     res.setHeader('Strict-Transport-Security', 'max-age=630720');
   }
   // Defend against Cross Site Scripting (XSS)
@@ -52,7 +53,7 @@ function resSec(req, res, next) {
   // Require iFrame sources to come from the same origin
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   // Content Security Policy
-  // Helpful in preventing XSS to ensure scripts only come
+  // Preventing XSS to ensure scripts only come
   // from approved origins
   res.setHeader("Content-Security-Policy", "script-src 'self'");
   // Send the request on with security headers

@@ -21,7 +21,8 @@ export class AuthGuard implements CanActivate {
     if (this.auth.isAuthenticated) {
       return true;
     }
-    // Save secure path to redirect to after successful login and prompt to log in
+    // Save secure path to redirect to after
+    // successful login and prompt to log in
     this.auth.storeAuthRedirect(state.url);
     this.auth.login(true);
     return false;
