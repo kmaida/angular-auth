@@ -3,6 +3,7 @@ import { BehaviorSubject, bindNodeCallback, timer, of, Subscription } from 'rxjs
 import { mergeMap } from 'rxjs/operators';
 import * as auth0 from 'auth0-js';
 import { environment } from './../../environments/environment';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -43,7 +44,10 @@ export class AuthService {
   // (e.g., on the callback page)
   hideAuthHeader: boolean;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private location: Location
+  ) { }
 
   login(autoLogin?: boolean) {
     // Was this triggered by unauthorized access attempt?
@@ -64,6 +68,9 @@ export class AuthService {
       // Subscribe to parseHash$ bound callback observable
       this.parseHash$({}).subscribe(
         authResult => {
+          // Don't keep the hash in history
+          this.location.replaceState('/');
+          // Log in locally and navigate
           this.localLogin(authResult);
           this.navigateAfterParseHash();
         },

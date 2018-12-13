@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IDino } from './../../../data/models/dino.interface';
+import { IDino } from '../../../data/dino.interface';
 import { AuthService } from './../../../auth/auth.service';
 
 @Component({

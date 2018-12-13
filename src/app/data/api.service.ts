@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { IDino } from './models/dino.interface';
+import { IDino } from './dino.interface';
 
 @Injectable({
   providedIn: 'root'

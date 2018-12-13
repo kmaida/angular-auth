@@ -32,14 +32,6 @@ module.exports = function(app, config) {
     algorithm: 'RS256'
   });
 
-  // Pass routing to Angular app
-  // (Don't run in dev)
-  if (app.get('env') !== 'dev') {
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../dist/angular-auth/index.html'));
-    });
-  }
-
   // GET API root
   app.get('/api/', (req, res) => {
     res.send('API works');
@@ -60,5 +52,13 @@ module.exports = function(app, config) {
       res.json(thisDino);
     }, delay());
   });
+
+  // Pass routing to Angular app
+  // (Don't run in dev)
+  if (app.get('env') !== 'dev') {
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../dist/angular-auth/index.html'));
+    });
+  }
 
 };
