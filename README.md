@@ -19,6 +19,8 @@
 5. Add `http://localhost:4200` (dev) and `http://localhost:3000` (stage) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
 6. _If / when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well._
 7. You can also [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
+8. Go to the [**APIs**](https://manage.auth0.com/#/apis) section and click the "+ Create API" button.
+9. Give your API a name like `Secure Dino API` and enter an identifier. The identifier will be the _audience_ claim for access tokens to call this API. The identifier must be `https://secure-dino-api`. Save your settings.
 
 *_If using social connections, set up your own social keys! Do not leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
@@ -38,10 +40,9 @@ $ npm install
 
 ## Configuration
 
-1. Open `/api/config.js.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain (which can be found in your [Auth0 Dashboard](https://manage.auth0.com) application settings).
-2. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
-3. Open `/src/environments/environment.stage.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
-4. _If / when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL (e.g., `https://my-angular-app.com`)._
+1. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
+2. Open `/src/environments/environment.stage.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
+3. _If / when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL (e.g., `https://my-angular-app.com`)._
 
 ## Serving the Project
 
@@ -50,10 +51,12 @@ $ npm install
 From the root of this project, run:
 
 ```bash
-$ npm run dev
+$ npm start
 ```
 
-This uses [nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) to serve the API as well as the Angular app via the [Angular CLI](https://cli.angular.io) using a proxy to the API. Your app will be available in the browser at `http://localhost:4200` and the API will be available at `http://localhost:4200/api`. Changes in the Angular app will be watched by the Angular CLI and changes to the API will be watched by nodemon.
+This uses the [Angular CLI](https://cli.angular.io) to serve the application. Your app will be available in the browser at `http://localhost:4200`.
+
+_Make sure you've also started the Node API, which can be found at [https://github.com/kmaida/node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure)._
 
 ### Staging / Production
 
@@ -99,7 +102,7 @@ If you have found a bug or if you have a feature request, please report them at 
 
 ## Author
 
-[Auth0](auth0.com)
+[Kim Maida](https://kmaida.io)
 
 ## License
 

@@ -18,7 +18,7 @@ export class AuthService {
     clientID: environment.auth.clientId,
     domain: environment.auth.domain,
     responseType: 'token id_token',
-    audience: environment.auth.audience,
+    audience: 'https://secure-dino-api',
     redirectUri: environment.auth.redirect,
     scope: 'openid profile email read:dino-details write:dino-fav read:admin'
   });
@@ -97,9 +97,8 @@ export class AuthService {
   private localLogin(authResult) {
     if (authResult && authResult.accessToken && authResult.idToken && authResult.idTokenPayload) {
       // Set token expiration
-      const now = new Date();
-      const expInMs = authResult.expiresIn * 1000;
-      this.accessTokenExp = now.getTime() + expInMs;
+      const now = new Date().getTime();
+      this.accessTokenExp = now + (authResult.expiresIn * 1000);
       // Set token in local property and emit in stream
       this.setToken(authResult.accessToken);
       // Emit value for user profile stream
