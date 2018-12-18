@@ -7,6 +7,7 @@ export const environment = {
   auth: {
     clientId: '{YOUR_AUTH0_CLIENT_ID}',
     domain: '{YOUR_AUTH0_DOMAIN}', // e.g., you.auth0.com
+    audience: '{YOUR_API_IDENTIFIER}', // e.g., https://secure-dino-api
     redirect: 'http://localhost:4200/callback',
     logoutUrl: 'http://localhost:4200'
   }

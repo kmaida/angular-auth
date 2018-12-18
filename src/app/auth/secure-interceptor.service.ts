@@ -21,7 +21,7 @@ export class SecureInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     if (req.url.indexOf('secure') > -1) {
-      return this.auth.token$.pipe(
+      return this.auth.accessToken$.pipe(
         filter(token => typeof token === 'string'),
         mergeMap(token => {
           const tokenReq = req.clone({

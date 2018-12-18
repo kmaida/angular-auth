@@ -8,7 +8,7 @@ import { IDino } from './dino.interface';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiRoot = '/api/';
+  private apiRoot = 'http://localhost:3005/api/';
 
   constructor(private http: HttpClient) { }
 

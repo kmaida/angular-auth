@@ -1,16 +1,15 @@
 {
   "name": "angular-auth",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run dev",
+    "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "concurrently \"ng serve\" \"NODE_ENV=dev nodemon api/server\"",
     "stage": "ng build --configuration=stage && node api/server",
-    "prod": "ng build --prod && node api/server"
+    "prod": "ng build --prod && node server"
   },
   "private": false,
   "dependencies": {
@@ -27,8 +26,6 @@
     "body-parser": "^1.18.3",
     "core-js": "^2.5.4",
     "express": "^4.16.4",
-    "express-jwt": "^5.3.1",
-    "jwks-rsa": "^1.3.0",
     "path": "^0.12.7",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
@@ -43,7 +40,6 @@
     "@types/jasminewd2": "~2.0.6",
     "@types/node": "~10.12.10",
     "codelyzer": "~4.5.0",
-    "concurrently": "^4.1.0",
     "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",
@@ -51,7 +47,6 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
-    "nodemon": "^1.18.6",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",

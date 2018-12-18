@@ -8,8 +8,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-// Config
-const config = require('./config');
 
 /*
  |--------------------------------------
@@ -18,18 +16,15 @@ const config = require('./config');
  */
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set port
 const port = '3000';
 app.set('port', port);
 
 // Set static path to Angular app
-// (Don't run in dev)
-if (app.get('env') !== 'dev') {
-  app.use('/', express.static(path.join(__dirname, '../dist/angular-auth')));
-}
+app.use('/', express.static(path.join(__dirname, './dist/angular-auth')));
 
 /*
  |--------------------------------------
@@ -39,7 +34,7 @@ if (app.get('env') !== 'dev') {
 
 // Response security middleware
 function resSec(req, res, next) {
-  if (app.get('env') !== 'dev' && app.get('env') !== 'stage') {
+  if (app.get('env') !== 'stage') {
     // HTTP Strict Transport Security (HSTS)
     // Enforces HTTPS across the entire app
     // While nginx can do a redirect, HSTS redirects
@@ -67,7 +62,10 @@ app.use(resSec);
  |--------------------------------------
  */
 
-require('./routes')(app, config);
+// Pass routing to Angular app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './dist/angular-auth/index.html'));
+});
 
 /*
  |--------------------------------------

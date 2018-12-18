@@ -17,16 +17,17 @@ export class AuthService {
   private Auth0 = new auth0.WebAuth({
     clientID: environment.auth.clientId,
     domain: environment.auth.domain,
-    responseType: 'id_token',
+    responseType: 'token id_token',
+    audience: environment.auth.audience,
     redirectUri: environment.auth.redirect,
-    scope: 'openid profile email'
+    scope: 'openid profile email read:dino-details write:dino-fav read:admin'
   });
   // localStorage property names
   private authFlag = 'isLoggedIn';
   private redirect = 'redirect';
-  // Store token and create token stream
-  token: string = null;
-  token$ = new BehaviorSubject<string>(this.token);
+  // Store access token and create stream
+  accessToken: string = null;
+  accessToken$ = new BehaviorSubject<string>(this.accessToken);
   // Create stream of user profile data
   userProfile$ = new BehaviorSubject<any>(null);
   // Auth-related URL paths
@@ -38,7 +39,7 @@ export class AuthService {
   // verify authorization server session and renew tokens
   checkSession$ = bindNodeCallback(this.Auth0.checkSession.bind(this.Auth0));
   // Token expiration management
-  tokenExp: number;
+  accessTokenExp: number;
   refreshSub: Subscription;
   // Hide auth header while performing local login
   // (e.g., on the callback page)
@@ -94,11 +95,13 @@ export class AuthService {
   }
 
   private localLogin(authResult) {
-    if (authResult && authResult.idToken && authResult.idTokenPayload) {
+    if (authResult && authResult.accessToken && authResult.idToken && authResult.idTokenPayload) {
       // Set token expiration
-      this.tokenExp = authResult.idTokenPayload.exp * 1000;
+      const now = new Date();
+      const expInMs = authResult.expiresIn * 1000;
+      this.accessTokenExp = now.getTime() + expInMs;
       // Set token in local property and emit in stream
-      this.setToken(authResult.idToken);
+      this.setToken(authResult.accessToken);
       // Emit value for user profile stream
       this.userProfile$.next(authResult.idTokenPayload);
       // Set flag in local storage stating app is logged in
@@ -139,7 +142,7 @@ export class AuthService {
     // Clean up any previous token renewal
     this.unscheduleRenewal();
     // Create and subscribe to expiration timer observable
-    const expiresIn$ = of(this.tokenExp).pipe(
+    const expiresIn$ = of(this.accessTokenExp).pipe(
       mergeMap(exp => timer(Math.max(1, exp - Date.now())))
     );
     this.refreshSub = expiresIn$.subscribe(
@@ -166,8 +169,8 @@ export class AuthService {
   }
 
   setToken(token: string) {
-    this.token = token;
-    this.token$.next(token);
+    this.accessToken = token;
+    this.accessToken$.next(token);
   }
 
   navigateAfterParseHash() {
