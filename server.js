@@ -7,7 +7,6 @@
 // Modules
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
 
 /*
  |--------------------------------------
@@ -16,8 +15,6 @@ const bodyParser = require('body-parser');
  */
 
 const app = express();
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set port
 const port = '3000';
