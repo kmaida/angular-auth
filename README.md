@@ -1,9 +1,10 @@
 # Angular Authentication with Auth0
 
-## Dependencies
+## Prerequisites
 
 * [Node.js with npm](http://nodejs.org), Node >= 6.9.0, npm >= 3
 * [@angular/cli](https://github.com/angular/angular-cli), >= 7
+* [node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure), cloned and running locally (follow README instructions in `node-api-dinos-secure` repo)
 
 ### Sign Up for Auth0
 
@@ -25,6 +26,8 @@
 *_If using social connections, set up your own social keys! Do not leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
 ## Installation
+
+_**Prerequisite:** [node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure) should already be cloned, installed, and running locally. By default, this runs on localhost port 3005._
 
 Clone this repository locally:
 

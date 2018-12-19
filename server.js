@@ -36,7 +36,7 @@ function resSec(req, res, next) {
     // Enforces HTTPS across the entire app
     // While nginx can do a redirect, HSTS redirects
     // before anything is sent to the server
-    // (Only check this in a production environment)
+    // (Only run this in an SSL environment)
     res.setHeader('Strict-Transport-Security', 'max-age=630720');
   }
   // Defend against Cross Site Scripting (XSS)
