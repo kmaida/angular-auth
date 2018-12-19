@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { IDinoDetails } from '../../data/dino.interface';
 import { ApiService } from './../../data/api.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-dinosaur-details',
@@ -30,7 +31,8 @@ export class DinosaurDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private title: Title,
     private route: ActivatedRoute,
-    private api: ApiService
+    private api: ApiService,
+    public auth: AuthService
   ) { }
 
   ngOnInit() {

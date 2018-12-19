@@ -29,7 +29,8 @@ export class AuthService {
   accessToken: string = null;
   accessToken$ = new BehaviorSubject<string>(this.accessToken);
   // Create stream of user profile data
-  userProfile$ = new BehaviorSubject<any>(null);
+  userProfile: any = null;
+  userProfile$ = new BehaviorSubject<any>(this.userProfile);
   // Auth-related URL paths
   logoutPath = '/';
   defaultSuccessPath = '/';
@@ -102,7 +103,8 @@ export class AuthService {
       // Set token in local property and emit in stream
       this.setToken(authResult.accessToken);
       // Emit value for user profile stream
-      this.userProfile$.next(authResult.idTokenPayload);
+      this.userProfile = authResult.idTokenPayload;
+      this.userProfile$.next(this.userProfile);
       // Set flag in local storage stating app is logged in
       localStorage.setItem(this.authFlag, JSON.stringify(true));
       // Set up silent token renewal for this browser session
@@ -199,6 +201,10 @@ export class AuthService {
 
   goToLogoutUrl() {
     this.router.navigate([this.logoutPath]);
+  }
+
+  userHasRole(reqRole: string): boolean {
+    return this.userProfile[environment.auth.roles_namespace].indexOf(reqRole) > -1;
   }
 
 }
