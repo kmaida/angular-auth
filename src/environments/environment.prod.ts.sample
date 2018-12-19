@@ -5,5 +5,8 @@ export const environment = {
     domain: '{YOUR_AUTH0_DOMAIN}', // e.g., you.auth0.com,
     redirect: '{YOUR_PRODUCTION_URL}/callback',
     logoutUrl: '{YOUR_PRODUCTION_URL}'
+  },
+  api: {
+    baseUrl: '{YOUR_API_URL}' // e.g., http://api.myproductionurl.com/
   }
 };

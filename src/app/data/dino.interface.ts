@@ -1,4 +1,8 @@
-export interface IDino {
+interface IDino {
+  name: string;
+  pronunciation: string;
+}
+interface IDinoDetails {
   name: string;
   pronunciation: string;
   meaningOfName: string;
@@ -8,3 +12,5 @@ export interface IDino {
   mya: string;
   info: string;
 }
+
+export { IDino, IDinoDetails };

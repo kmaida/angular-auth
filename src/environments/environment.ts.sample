@@ -9,6 +9,9 @@ export const environment = {
     domain: '{YOUR_AUTH0_DOMAIN}', // e.g., you.auth0.com
     redirect: 'http://localhost:4200/callback',
     logoutUrl: 'http://localhost:4200'
+  },
+  api: {
+    baseUrl: '{YOUR_API_URL}' // e.g., http://localhost:3005/api/
   }
 };
 

@@ -20,7 +20,7 @@ export class SecureInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (req.url.indexOf('secure') > -1) {
+    if (req.url.indexOf('/secure/') > -1) {
       return this.auth.accessToken$.pipe(
         filter(token => typeof token === 'string'),
         mergeMap(token => {
