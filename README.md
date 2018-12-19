@@ -20,8 +20,7 @@
 5. Add `http://localhost:4200` (dev) and `http://localhost:3000` (stage) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
 6. _If / when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well._
 7. You can also [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
-8. Go to the [**APIs**](https://manage.auth0.com/#/apis) section and click the "+ Create API" button.
-9. Give your API a name like `Secure Dino API` and enter an identifier. The identifier will be the _audience_ claim for access tokens to call this API. The identifier must be `https://secure-dino-api`. Save your settings.
+8. Make sure you have followed the [API Setup instructions in the API README here](https://github.com/kmaida/node-api-dinos-secure#auth0-setup).
 
 *_If using social connections, set up your own social keys! Do not leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
@@ -45,7 +44,7 @@ $ npm install
 
 1. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
 2. Open `/src/environments/environment.stage.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
-3. _If / when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL (e.g., `https://my-angular-app.com`)._
+3. (If / when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL, e.g., `https://my-angular-app.com`.)
 
 ## Serving the Project
 
@@ -55,6 +54,7 @@ From the root of this project, run:
 
 ```bash
 $ npm start
+# ng serve
 ```
 
 This uses the [Angular CLI](https://cli.angular.io) to serve the application. Your app will be available in the browser at `http://localhost:4200`.
@@ -87,21 +87,6 @@ This project supplies a stream of authentication events (called `authStatus$` an
 You can also see the current status of the authentication flow via the `authStatus` property supplied by `auth.service.ts`.
 
 To take advantage of the authentication stream, you can subscribe to it in a component such as the `AuthHeader` and log each event to the console.
-
-## What is Auth0?
-
-Auth0 helps you to:
-
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
-* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
-* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
-* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
-* Analytics of how, when and where users are logging in.
-* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
-
-## Issue Reporting
-
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ## Author
 
