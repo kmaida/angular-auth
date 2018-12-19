@@ -59,7 +59,7 @@ $ npm start
 
 This uses the [Angular CLI](https://cli.angular.io) to serve the application. Your app will be available in the browser at `http://localhost:4200`.
 
-_Make sure you've also started the Node API, which can be found at [https://github.com/kmaida/node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure)._
+_Make sure you've also started the Node API, which can be found at [node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure)._
 
 ### Staging / Production
 
