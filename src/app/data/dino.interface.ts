@@ -1,6 +1,7 @@
 interface IDino {
   name: string;
   pronunciation: string;
+  favorite?: boolean;
 }
 interface IDinoDetails {
   name: string;
@@ -11,6 +12,7 @@ interface IDinoDetails {
   period: string;
   mya: string;
   info: string;
+  favorite?: boolean;
 }
 
 export { IDino, IDinoDetails };

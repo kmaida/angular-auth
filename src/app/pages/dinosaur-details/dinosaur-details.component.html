@@ -3,8 +3,8 @@
   <app-error *ngIf="error" [errorMsg]="errorMsg"></app-error>
 </ng-template>
 
-<ng-container *ngIf="(params$ | async) && (dino$ | async) as dino else noDino">
-  <h1 class="text-center py-2">{{ dino.name }}</h1>
+<ng-container *ngIf="(params$ | async) && dino else noDino">
+  <h1 class="text-center py-2">{{ dino.name }} <span *ngIf="dino.favorite">⭐️</span></h1>
   <div class="card my-2">
     <div class="card-body">
       <div class="card-text">
@@ -17,6 +17,13 @@
         </ul>
       </div>
       <p class="card-text lead" [innerHTML]="dino.info"></p>
+      <p>
+        <button
+          class="btn btn-sm"
+          [ngClass]="{ 'btn-success': !dino.favorite, 'btn-danger': dino.favorite }"
+          [disabled]="savingFav"
+          (click)="toggleFav()">{{ getFavBtnText }}</button>
+      </p>
     </div>
   </div>
 </ng-container>
