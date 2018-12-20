@@ -4,7 +4,7 @@
 
 * [Node.js with npm](http://nodejs.org), Node >= 6.9.0, npm >= 3
 * [@angular/cli](https://github.com/angular/angular-cli), >= 7
-* [node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure), cloned and running locally (follow README instructions in `node-api-dinos-secure` repo)
+* [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api), cloned, configured, and running locally (follow README instructions in `node-secure-dino-api` repo)
 
 ### Sign Up for Auth0
 
@@ -13,25 +13,25 @@
 
 ### Auth0 Setup
 
-1. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
-2. Name your new app and select "Single Page Web Applications".
-3. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (stage) to the **Allowed Callback URLs**.
-4. _If / when you have a production URL, add it (with the `/callback` segment) to **Allowed Callback URLs** as well._
-5. Add `http://localhost:4200` (dev) and `http://localhost:3000` (stage) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
-6. _If / when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well._
-7. You can also [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
-8. Make sure you have followed the [API Setup instructions in the API README here](https://github.com/kmaida/node-api-dinos-secure#auth0-setup).
+1. Make sure you have followed the [API Setup instructions in the API README here](https://github.com/kmaida/node-secure-dino-api#auth0-setup).
+2. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
+3. Name your new app and select "Single Page Web Applications".
+4. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (stage) to the **Allowed Callback URLs**.
+5. _If / when you have a production URL, add it (with the `/callback` segment) to **Allowed Callback URLs** as well._
+6. Add `http://localhost:4200` (dev) and `http://localhost:3000` (stage) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
+7. _If / when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well._
+8. You can also [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
 
 *_If using social connections, set up your own social keys! Do not leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
 ## Installation
 
-_**Prerequisite:** [node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure) should already be cloned, installed, and running locally. By default, this runs on localhost port 3005._
+_**Prerequisite:** [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api) should already be cloned, installed, and running locally. By default, this runs on localhost port 3005._
 
 Clone this repository locally:
 
 ```bash
-$ git clone https://github.com/auth0-blog/angular-authentication.git
+$ git clone https://github.com/kmaida/angular-auth.git
 ```
 
 From the root directory, run the following command to install dependencies:
@@ -42,9 +42,9 @@ $ npm install
 
 ## Configuration
 
-1. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
-2. Open `/src/environments/environment.stage.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain.
-3. (If / when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL, e.g., `https://my-angular-app.com`.)
+1. Open `/src/environments/environment.ts.sample` and remove `.sample` from the file name. Replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_ROLES_NAMESPACE}` with `https://secure-dino-api/roles`.
+2. Open `/src/environments/environment.stage.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}` and `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_ROLES_NAMESPACE}` with `https://secure-dino-api/roles`.
+3. (If / when you know your production URL, open `/src/environments/environment.prod.ts.sample` and remove `.sample` from the file name. Then replace `{YOUR_AUTH0_CLIENT_ID}`, `{YOUR_AUTH0_DOMAIN}` with your Auth0 application's client ID and domain. Replace `{YOUR_ROLES_NAMESPACE}` with `https://secure-dino-api/roles`. Replace `{YOUR_PRODUCTION_URL}` with your app's deployed production URL, e.g., `https://my-angular-app.com`.)
 
 ## Serving the Project
 
@@ -59,7 +59,7 @@ $ npm start
 
 This uses the [Angular CLI](https://cli.angular.io) to serve the application. Your app will be available in the browser at `http://localhost:4200`.
 
-_Make sure you've also started the Node API, which can be found at [node-api-dinos-secure](https://github.com/kmaida/node-api-dinos-secure)._
+_Make sure you've also started the Node API, which can be found at [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api)._
 
 ### Staging / Production
 

@@ -5,7 +5,7 @@ export const environment = {
     domain: '{YOUR_AUTH0_DOMAIN}', // e.g., you.auth0.com,
     redirect: '{YOUR_PRODUCTION_URL}/callback',
     logoutUrl: '{YOUR_PRODUCTION_URL}',
-    roles_namespace: '{YOUR_ROLES_NAMESPACE}' // e.g., http://myapp.com/roles
+    roles_namespace: '{YOUR_ROLES_NAMESPACE}' // e.g., https://secure-dino-api/roles
   },
   api: {
     baseUrl: '{YOUR_API_URL}' // e.g., http://api.myproductionurl.com/

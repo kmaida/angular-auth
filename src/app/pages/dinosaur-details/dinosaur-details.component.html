@@ -19,7 +19,7 @@
       <p class="card-text lead" [innerHTML]="dino.info"></p>
       <p>
         <button
-          *ngIf="auth.userHasRole('admin')"
+          *ngIf="auth.userHasRole('editor')"
           class="btn btn-sm"
           [ngClass]="{ 'btn-success': !dino.favorite, 'btn-danger': dino.favorite }"
           [disabled]="savingFav"

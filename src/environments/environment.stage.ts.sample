@@ -6,7 +6,7 @@ export const environment = {
     domain: '{YOUR_AUTH0_DOMAIN}', // e.g., you.auth0.com
     redirect: 'http://localhost:3000/callback',
     logoutUrl: 'http://localhost:3000',
-    roles_namespace: '{YOUR_ROLES_NAMESPACE}' // e.g., http://myapp.com/roles
+    roles_namespace: '{YOUR_ROLES_NAMESPACE}' // e.g., https://secure-dino-api/roles
   },
   api: {
     baseUrl: '{YOUR_API_URL}' // e.g., http://localhost:3005/api/
