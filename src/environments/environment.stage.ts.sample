@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   envName: 'stage',
   auth: {
     clientId: '{YOUR_AUTH0_CLIENT_ID}',
