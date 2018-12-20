@@ -17,16 +17,16 @@
 2. Go to your [**Auth0 Dashboard: Applications**](https://manage.auth0.com/#/applications) section and click the "[+ Create Application](https://manage.auth0.com/#/applications/create)" button.
 3. Name your new app and select "Single Page Web Applications".
 4. In the **Settings** for your new Auth0 app, add `http://localhost:4200/callback` (dev) and `http://localhost:3000/callback` (stage) to the **Allowed Callback URLs**.
-5. _If / when you have a production URL, add it (with the `/callback` segment) to **Allowed Callback URLs** as well._
+5. (If / when you have a production URL, add it (with the `/callback` segment) to **Allowed Callback URLs** as well.)
 6. Add `http://localhost:4200` (dev) and `http://localhost:3000` (stage) to both the **Allowed Web Origins** and **Allowed Logout URLs**. Click the "Save Changes" button.
-7. _If / when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well._
+7. (If / when you have a production URL, add that to the **Allowed Web Origins** and **Allowed Logout URLs** as well.)
 8. You can also [set up some social connections](https://manage.auth0.com/#/connections/social).* You can then enable them for your app in the **Application** options under the **Connections** tab.
 
 *_If using social connections, set up your own social keys! Do not leave social connections set to use Auth0 dev keys or you will encounter issues with token renewal._
 
 ## Installation
 
-_**Prerequisite:** [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api) should already be cloned, installed, and running locally. By default, this runs on localhost port 3005._
+**Prerequisite:** [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api) should already be cloned, installed, and running locally. By default, this runs on `http://localhost:3005`.
 
 Clone this repository locally:
 
@@ -59,11 +59,11 @@ $ npm start
 
 This uses the [Angular CLI](https://cli.angular.io) to serve the application. Your app will be available in the browser at `http://localhost:4200`.
 
-_Make sure you've also started the Node API, which can be found at [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api)._
+(Make sure you've also started the Node API, which can be found at [node-secure-dino-api](https://github.com/kmaida/node-secure-dino-api).)
 
 ### Staging / Production
 
-To build _and_ serve a production-ready version of the application, from the root of this project, run:
+To build _and_ serve a compiled version of the application, from the root of this project, run:
 
 ```bash
 # Staging environment
@@ -82,7 +82,7 @@ $ node server
 
 ## Authentication Stream
 
-This project supplies a stream of authentication events (called `authStatus$` and available in the `auth.service.ts` file) that you can subscribe to in order to follow the authentication flow in your browser's console when developing the application.
+This project provides a stream of authentication events (called `authStatus$` and available in the `auth.service.ts` file) that you can subscribe to in order to follow the authentication flow in your browser's console when developing the application.
 
 You can also see the current status of the authentication flow via the `authStatus` property supplied by `auth.service.ts`.
 
