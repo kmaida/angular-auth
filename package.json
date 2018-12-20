@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "stage": "ng build --configuration=stage && node server",
+    "stage": "ng build --configuration=stage && NODE_ENV=stage node server",
     "prod": "ng build --prod && node server"
   },
   "private": false,

@@ -1,35 +1,10 @@
-/*
- |--------------------------------------
- | Dependencies
- |--------------------------------------
- */
-
-// Modules
+// Dependencies
 const express = require('express');
 const path = require('path');
-
-/*
- |--------------------------------------
- | App
- |--------------------------------------
- */
-
+// App
 const app = express();
 
-// Set port
-const port = '3000';
-app.set('port', port);
-
-// Set static path to Angular app
-app.use('/', express.static(path.join(__dirname, './dist/angular-auth')));
-
-/*
- |--------------------------------------
- | Security
- |--------------------------------------
- */
-
-// Response security middleware
+// Security middleware
 function resSec(req, res, next) {
   if (app.get('env') !== 'stage') {
     // HTTP Strict Transport Security (HSTS)
@@ -53,21 +28,13 @@ function resSec(req, res, next) {
 }
 app.use(resSec);
 
-/*
- |--------------------------------------
- | Routes
- |--------------------------------------
- */
-
+// Set static path to Angular app
+app.use('/', express.static(path.join(__dirname, './dist/angular-auth')));
 // Pass routing to Angular app
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './dist/angular-auth/index.html'));
 });
 
-/*
- |--------------------------------------
- | Server
- |--------------------------------------
- */
-
+// Server
+const port = '3000';
 app.listen(port, () => console.log(`Server running on localhost:${port}`));
