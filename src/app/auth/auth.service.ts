@@ -70,7 +70,7 @@ export class AuthService {
       // Subscribe to parseHash$ bound callback observable
       this.parseHash$({}).subscribe(
         authResult => {
-          // Don't keep the hash in history
+          // Don't keep callback route + hash in browser history
           this.location.replaceState('/');
           // Log in locally and navigate
           this.localLogin(authResult);
