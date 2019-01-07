@@ -32,14 +32,4 @@ export class ProfileComponent implements OnInit {
     this.title.setTitle('Profile');
   }
 
-  makeArray(obj): string[] {
-    const keyPropArray = [];
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        keyPropArray.push(key + ': ' + JSON.stringify(obj[key]));
-      }
-    }
-    return keyPropArray;
-  }
-
 }
