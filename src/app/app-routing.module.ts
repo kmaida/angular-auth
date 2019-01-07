@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthService } from './auth/auth.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SecureInterceptor } from './auth/secure-interceptor.service';
 import { AuthGuard } from './auth/auth.guard';
@@ -44,7 +43,6 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
   providers: [
-    AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SecureInterceptor,
