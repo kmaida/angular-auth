@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'app-dinosaur-details',
   templateUrl: './dinosaur-details.component.html',
-  styleUrls: ['./dinosaur-details.component.css']
+  styles: []
 })
 export class DinosaurDetailsComponent implements OnInit, OnDestroy {
   name: string;
