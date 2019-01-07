@@ -54,7 +54,7 @@ From the root of this project, run:
 
 ```bash
 $ npm start
-# ng serve
+# or ng serve
 ```
 
 This uses the [Angular CLI](https://cli.angular.io) to serve the application. Your app will be available in the browser at `http://localhost:4200`.
@@ -79,14 +79,6 @@ If you have _already built_ the Angular app and just want to serve it, you can r
 ```bash
 $ node server
 ```
-
-## Authentication Stream
-
-This project provides a stream of authentication events (called `authStatus$` and available in the `auth.service.ts` file) that you can subscribe to in order to follow the authentication flow in your browser's console when developing the application.
-
-You can also see the current status of the authentication flow via the `authStatus` property supplied by `auth.service.ts`.
-
-To take advantage of the authentication stream, you can subscribe to it in a component such as the `AuthHeader` and log each event to the console.
 
 ## Author
 
